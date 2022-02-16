@@ -1,0 +1,26 @@
+power calculator with in/output:
+"Enter base: " inp "Enter exponent: " inp dup sth swap dup sth swap ** sth out " to the power of " out out " is " out outln
+
+a b
+dup
+a b b
+sth
+b a b
+swap
+b b a
+dup
+b b a a
+sth
+a b b a
+swap
+a b a b
+**
+a b (a**b)
+sth
+(a**b) a b
+swap
+(a**b) b a
+(and then all the outs)
+
+tests if values are equal:
+"Enter value a: " in "Enter value b: " in dup sth swap dup sth = sth "Values \'" out out "\' and \'" out out "' are equal? " out outln
