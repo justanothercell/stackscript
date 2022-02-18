@@ -1,5 +1,8 @@
+droid 48
+
+
 power calculator with in/output:
-"Enter base: " inp "Enter exponent: " inp dup sth swap dup sth swap ** sth out " to the power of " out out " is " out outln
+"Enter base: " in parse "Enter exponent: " in parse dup sth swap dup sth swap ** sth out " to the power of " out out " is " out outln
 
 a b
 dup
