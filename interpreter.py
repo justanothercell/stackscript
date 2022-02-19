@@ -3,9 +3,12 @@ import shlex
 import sys
 
 
-def is_identifier(token, interpreter) -> bool:
-    return token.isidentifier() and token not in interpreter.builtins and token not in ['func', 'while', 'if', 'do', 'end']
-
+def is_identifier(token, interpreter, allow_builtin=False) -> bool:
+    if allow_builtin:
+        return token.isidentifier() and token not in ['func', 'while', 'if', 'do', 'end']
+    else:
+        return token.isidentifier() and token not in interpreter.builtins and token not in ['func', 'while', 'if', 'do',
+                                                                                            'end']
 
 def get_type(value) -> str:
     print(value, type(value))
@@ -233,6 +236,12 @@ class Scope:
                     self.inner_scope = None
                 return
             raise ParseException(f'Error with token "{token}" during {self.inner_scope_status} creation')
+        if token.startswith('@') and len(token) > 1:
+            if is_identifier(token[1:], interpreter, allow_builtin=True) or token[1:] in interpreter.builtins:
+                self.operations.append(PushValue(token, Reference(token[1:])))
+                return
+            else:
+                raise ParseException(f'"{token}" is not a valid identifier')
         if token in ['func', 'store', 'update', 'delete']:
             interpreter.tokening_indent += 1
             self.inner_scope_status = token
@@ -296,6 +305,36 @@ class Variable:
         return f'Variable[name="{self.name}", value={to_str(self.value, repr_=True)}]'
 
 
+class Reference:
+    def __init__(self, ref_to):
+        self.ref_to = ref_to
+
+    def call(self, interpreter: 'Interpreter'):
+        if self.ref_to in interpreter.builtins:
+            call = interpreter.builtins[self.ref_to]
+        else:
+            for layer in reversed(interpreter.layers):
+                if self.ref_to in layer:
+                    call = layer[self.ref_to]
+                    break
+            else:
+                raise RuntimeException(f'"{self.ref_to}" could not be found as a valid function or variable')
+
+        if isinstance(call, Function):
+            interpreter.scope_stack.append(call.start(interpreter))
+            return
+        if isinstance(call, Builtin):
+            call.execute(interpreter)
+            return
+        if isinstance(call, Variable):
+            interpreter.stack.append(call.value)
+            return
+        raise RuntimeException(f'Invalid call type {type(call)}')
+
+    def __repr__(self):
+        return f'@{self.ref_to}'
+
+
 class Global(Scope):
     ...
 
@@ -309,6 +348,11 @@ class Interpreter:
         self.scope_stack = []
         self.console_prefix = '#'
 
+        def call_ref(v):
+            try:
+                v.call(self)
+            except AttributeError:
+                raise TypeError(f'"{v}" is not a reference')
         self.builtins: dict[str, Builtin] = {
             'clear': Builtin('clear', 0, lambda: self.stack.clear()),
             'dump': Builtin('dump', 0, lambda: self.stack.append(f'[{", ".join(to_str(v, repr_=True) for v in self.stack)}]')),
@@ -317,6 +361,7 @@ class Interpreter:
 
             '~': Builtin('~', 1, lambda v: self.stack.append(~v)),
             '!': Builtin('!', 1, lambda v: self.stack.append(True if v == 0 else False)),
+            '@': Builtin('@', 1, lambda v: call_ref(v)),
             'out': Builtin('out', 1, lambda v: print(to_str(v), end='')),
             'outln': Builtin('outln', 1, lambda v: print(v)),
             'in': Builtin('in', 1, lambda v: self.stack.append(input(v))),

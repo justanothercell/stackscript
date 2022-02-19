@@ -27,3 +27,16 @@ swap
 
 tests if values are equal:
 "Enter value a: " in "Enter value b: " in dup sth swap dup sth = sth "Values \'" out out "\' and \'" out out "' are equal? " out outln
+
+@-references:
+func exec do @ end
+2 3 @**
+exec
+
+# @+
+[@+]
+# store add
+[]
+# 1 2 add @
+[3]
+#
