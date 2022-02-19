@@ -28,6 +28,7 @@ swap
 tests if values are equal:
 "Enter value a: " in "Enter value b: " in dup sth swap dup sth = sth "Values \'" out out "\' and \'" out out "' are equal? " out outln
 
+
 @-references:
 func exec do @ end
 2 3 @**
@@ -39,4 +40,28 @@ exec
 []
 # 1 2 add @
 [3]
+#
+
+
+while loops:
+# 10
+[10]
+# true while
+#.. "rocket starts in: " out dup out "s" outln
+#.. 1 - dup 0 >
+#.. end
+rocket starts in: 10s
+rocket starts in: 9s
+rocket starts in: 8s
+rocket starts in: 7s
+rocket starts in: 6s
+rocket starts in: 5s
+rocket starts in: 4s
+rocket starts in: 3s
+rocket starts in: 2s
+rocket starts in: 1s
+[0]
+# "takeoff!" outln
+takeoff!
+[0]
 #
