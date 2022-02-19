@@ -56,7 +56,7 @@ class Operation:
         raise NotImplemented
 
     def __repr__(self):
-        return f'{type(self).__name__}[name={self.name}]'
+        return f'{type(self).__name__}[name="{self.name}"]'
 
 
 class Builtin(Operation):
@@ -87,13 +87,48 @@ class DeclareFunction(Operation):
         interpreter.layers[-1][self.name] = self.function
 
 
-class CallFunctionOrVariable(Operation):
+class StoreVariable(Operation):
+    def __init__(self, name):
+        super().__init__(name)
+
+    def execute(self, interpreter: 'Interpreter'):
+        interpreter.layers[-1][self.name] = Variable(self.name, interpreter.pop_stack(1)[0])
+
+
+class UpdateVariable(Operation):
+    def __init__(self, name):
+        super().__init__(name)
+
+    def execute(self, interpreter: 'Interpreter'):
+        for i in range(len(interpreter.layers) - 1, -1, -1):
+            if self.name in interpreter.layers[i]:
+                interpreter.layers[i][self.name].value = interpreter.pop_stack(1)[0]
+                return
+        raise RuntimeException(f'Variable "{self.name}" does not seem to exist and therefore cannot be updated')
+
+
+class DeleteVariableOrFunc(Operation):
+    def __init__(self, name):
+        super().__init__(name)
+
+    def execute(self, interpreter: 'Interpreter'):
+        for i in range(len(interpreter.layers) - 1, -1, -1):
+            if self.name in interpreter.layers[i]:
+                del interpreter.layers[i][self.name]
+                return
+        raise RuntimeException(f'Identifier "{self.name}" does not seem to exist and therefore cannot be deleted')
+
+
+class Call(Operation):
     def execute(self, interpreter: 'Interpreter'):
         for layer in reversed(interpreter.layers):
             if self.name in layer:
                 call = layer[self.name]
                 if isinstance(call, Function):
                     interpreter.scope_stack.append(call.start(interpreter))
+                    return
+                if isinstance(call, Variable):
+                    interpreter.stack.append(call.value)
                     return
                 raise RuntimeException(f'Invalid call type {type(call)}')
         raise RuntimeException(f'"{self.name}" could not be found as a valid function or variable')
@@ -123,10 +158,47 @@ class Scope:
         self.operations: list[Operation] = []
         self.inner_scope_status: str = ''
         self.inner_scope: Function = None
-        interpreter.parse_time_func_stack.append([])
+        interpreter.parse_time_func_var_stack.append([])
 
     def add_token(self, token: str, interpreter: 'Interpreter'):
         if self.inner_scope_status != '':
+            if self.inner_scope_status in ['store', 'update', 'delete']:
+                if is_identifier(token, interpreter):
+                    if self.inner_scope_status == 'delete':
+                        for ptfvs in interpreter.parse_time_func_var_stack:
+                            if token in ptfvs:
+                                self.operations.append(DeleteVariableOrFunc(token))
+                                self.inner_scope_status = ''
+                                interpreter.tokening_indent -= 1
+                                interpreter.console_prefix = '#'
+                                return
+                        self.inner_scope_status = ''
+                        interpreter.tokening_indent -= 1
+                        interpreter.console_prefix = '#'
+                        raise ParseException(f'"{token}" is not an existing identifier and therefore can not be deleted')
+                    if self.inner_scope_status == 'update':
+                        for ptfvs in interpreter.parse_time_func_var_stack:
+                            if token in ptfvs:
+                                break
+                        else:
+                            self.inner_scope_status = ''
+                            interpreter.tokening_indent -= 1
+                            interpreter.console_prefix = '#'
+                            raise ParseException(f'"{token}" is not an existing identifier and therefore can not be updated')
+                    if self.inner_scope_status == 'store':
+                        self.operations.append(StoreVariable(token))
+                        interpreter.parse_time_func_var_stack[-1].append(token)
+                    else:
+                        self.operations.append(UpdateVariable(token))
+                    self.inner_scope_status = ''
+                    interpreter.tokening_indent -= 1
+                    interpreter.console_prefix = '#'
+                    return
+                self.inner_scope_status = ''
+                interpreter.tokening_indent -= 1
+                interpreter.console_prefix = '#'
+                raise ParseException(f'"{token}" is not a valid identifier '
+                                     f'{"(Can not override builtins)" if token in interpreter.builtins else ""}')
             if self.inner_scope_status == 'func':
                 if is_identifier(token, interpreter):
                     self.inner_scope = Function(token, interpreter)
@@ -153,7 +225,7 @@ class Scope:
                     self.inner_scope.add_token(token, interpreter)
                 except Return:
                     self.inner_scope.operations.append(EndScope(token))
-                    interpreter.parse_time_func_stack[-1].append(self.inner_scope.name)
+                    interpreter.parse_time_func_var_stack[-1].append(self.inner_scope.name)
                     self.operations.append(DeclareFunction(self.inner_scope.name, self.inner_scope))
                     self.inner_scope_status = ''
                     interpreter.tokening_indent -= 1
@@ -161,7 +233,7 @@ class Scope:
                     self.inner_scope = None
                 return
             raise ParseException(f'Error with token "{token}" during {self.inner_scope_status} creation')
-        if token in ['func']:
+        if token in ['func', 'store', 'update', 'delete']:
             interpreter.tokening_indent += 1
             self.inner_scope_status = token
             interpreter.console_prefix = '+'
@@ -174,12 +246,12 @@ class Scope:
             self.operations.append(interpreter.builtins[token])
             return
         if is_identifier(token, interpreter):
-            for ptfs in interpreter.parse_time_func_stack:
-                if token in ptfs:
-                    self.operations.append(CallFunctionOrVariable(token))
+            for ptfvs in interpreter.parse_time_func_var_stack:
+                if token in ptfvs:
+                    self.operations.append(Call(token))
                     return
         if token == 'end':
-            interpreter.parse_time_func_stack.pop()
+            interpreter.parse_time_func_var_stack.pop()
             raise Return
         raise ParseException(f'Invalid token "{token}"')
 
@@ -188,7 +260,7 @@ class Scope:
         return ScopeExecutioner(self)
 
     def __repr__(self):
-        return f'{type(self).__name__}[name={self.name}, ops={len(self.operations)}]'
+        return f'{type(self).__name__}[name="{self.name}", ops={len(self.operations)}]'
 
 
 class ScopeExecutioner:
@@ -215,6 +287,15 @@ class Function(Scope):
     ...
 
 
+class Variable:
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+    def __repr__(self):
+        return f'Variable[name="{self.name}", value={to_str(self.value, repr_=True)}]'
+
+
 class Global(Scope):
     ...
 
@@ -224,7 +305,7 @@ class Interpreter:
         self.tokening_indent = 0
         self.stack = []
         self.layers: list[dict] = []
-        self.parse_time_func_stack: list[list[str]] = []
+        self.parse_time_func_var_stack: list[list[str]] = []
         self.scope_stack = []
         self.console_prefix = '#'
 
@@ -289,9 +370,10 @@ class Interpreter:
         operation: Operation = self.scope_stack[-1].get_next()
         operation.execute(self)
         if debug:
-            print(f'[DEBUG] operation = {operation}')
-            print(f'[DEBUG] scope_stack = {self.scope_stack}')
-            print(f'[DEBUG] layers = {self.layers}')
+            print(f'operation = {operation}')
+            print(f'scope_stack = {self.scope_stack}')
+            print(f'layers = {self.layers}')
+            print(f'builtins = {self.builtins}')
 
     def execute_all(self, debug=False):
         while self.scope_stack[-1].has_next():
