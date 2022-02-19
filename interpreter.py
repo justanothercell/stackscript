@@ -144,8 +144,25 @@ class CallIf(Operation):
         self.scope = scope
 
     def execute(self, interpreter: 'Interpreter'):
-        if interpreter.pop_stack(1)[0] == True:  # == True is important else it will let almost anything be True
-            interpreter.scope_stack.append(self.scope.start(interpreter))
+        is_true = interpreter.pop_stack(1)[0] == True  # == True is important else it will let almost anything be True
+        if interpreter.scope_stack[-1].has_next():
+            potential_else = interpreter.scope_stack[-1].scope.operations[interpreter.scope_stack[-1].pointer]
+            if isinstance(potential_else, CallElse):
+                interpreter.scope_stack[-1].pointer += 1
+                if not is_true:
+                    potential_else.execute(interpreter, after_if=True)
+            if is_true:
+                interpreter.scope_stack.append(self.scope.start(interpreter))
+
+
+class CallElse(Operation):
+    def __init__(self, name, scope: 'Scope'):
+        super().__init__(name)
+        self.scope = scope
+
+    def execute(self, interpreter: 'Interpreter', after_if=False):  # after if ensures it is called after an if and not randomly
+        assert after_if, 'this "else" was not proceeded by an "if"'
+        interpreter.scope_stack.append(self.scope.start(interpreter))
 
 
 class CallWhile(Operation):
@@ -239,6 +256,7 @@ class Scope:
                 if token == 'do':
                     self.inner_scope_status += '.scope'
                     interpreter.console_prefix = '#'
+                    interpreter.parse_time_func_var_stack[-2].append(self.inner_scope.name)
                     return
                 self.inner_scope_status = ''
                 self.inner_scope = None
@@ -251,10 +269,11 @@ class Scope:
                 except Return:
                     self.inner_scope.operations.append(EndScope(token))
                     if self.inner_scope_status.startswith('func'):
-                        interpreter.parse_time_func_var_stack[-1].append(self.inner_scope.name)
                         self.operations.append(DeclareFunction(self.inner_scope.name, self.inner_scope))
                     elif self.inner_scope_status.startswith('if'):
                         self.operations.append(CallIf(self.inner_scope.name, self.inner_scope))
+                    elif self.inner_scope_status.startswith('else'):
+                        self.operations.append(CallElse(self.inner_scope.name, self.inner_scope))
                     elif self.inner_scope_status.startswith('while'):
                         self.operations.append(CallWhile(self.inner_scope.name, self.inner_scope))
                     self.inner_scope_status = ''
@@ -274,11 +293,13 @@ class Scope:
             self.inner_scope_status = token
             interpreter.console_prefix = '+'
             return
-        if token in ['if', 'while']:
+        if token in ['if', 'elif', 'else', 'while']:
             interpreter.tokening_indent += 1
             self.inner_scope_status = token + '.scope'
             if token == 'if':
                 self.inner_scope = If(token, interpreter)
+            if token == 'else':
+                self.inner_scope = Else(token, interpreter)
             if token == 'while':
                 self.inner_scope = While(token, interpreter)
             return
@@ -332,6 +353,10 @@ class Function(Scope):
 
 
 class If(Scope):
+    ...
+
+
+class Else(Scope):
     ...
 
 
@@ -408,6 +433,7 @@ class Interpreter:
             'out': Builtin('out', 1, lambda v: print(to_str(v), end='')),
             'outln': Builtin('outln', 1, lambda v: print(v)),
             'in': Builtin('in', 1, lambda v: self.stack.append(input(v))),
+            'exit': Builtin('exit', 1, lambda v: exit(v)),
             'sqrt': Builtin('in', 1, lambda v: self.stack.append(input(v))),
             'parse': Builtin('parse', 1, lambda v: self.stack.append(parse_value(v))),
             'dup': Builtin('dup', 1, lambda v: self.stack.extend((v, v))),

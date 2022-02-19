@@ -63,3 +63,9 @@ rocket starts in: 1s
 takeoff!
 [0]
 #
+
+
+if's:
+func foo do if trace outln end else trace outln end end
+true foo
+false foo
