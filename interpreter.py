@@ -2,13 +2,14 @@ import codecs
 import shlex
 import sys
 
+keywords = ['func', 'while', 'if', 'else', 'do', 'end', 'store', 'update', 'delete', 'return', 'break', 'continue']
+
 
 def is_identifier(token, interpreter, allow_builtin=False) -> bool:
     if allow_builtin:
-        return token.isidentifier() and token not in ['func', 'while', 'if', 'do', 'end']
+        return token.isidentifier() and token not in keywords
     else:
-        return token.isidentifier() and token not in interpreter.builtins and token not in ['func', 'while', 'if', 'do',
-                                                                                            'end']
+        return token.isidentifier() and token not in interpreter.builtins and token not in keywords
 
 
 def get_type(value) -> str:
@@ -182,6 +183,34 @@ class EndScope(Operation):
         interpreter.scope_stack.pop()
 
 
+class Return(Operation):
+    def execute(self, interpreter: 'Interpreter'):
+        interpreter.layers.pop()
+        popped = interpreter.scope_stack.pop()
+        while not isinstance(popped.scope, Function):
+            interpreter.layers.pop()
+            popped = interpreter.scope_stack.pop()
+
+
+class Break(Operation):
+    def execute(self, interpreter: 'Interpreter'):
+        interpreter.layers.pop()
+        popped = interpreter.scope_stack.pop()
+        while not isinstance(popped.scope, While):
+            interpreter.layers.pop()
+            popped = interpreter.scope_stack.pop()
+            interpreter.scope_stack[-1].pointer += 1
+
+
+class Continue(Operation):
+    def execute(self, interpreter: 'Interpreter'):
+        interpreter.layers.pop()
+        popped = interpreter.scope_stack.pop()
+        while not isinstance(popped.scope, While):
+            interpreter.layers.pop()
+            popped = interpreter.scope_stack.pop()
+
+
 class ParseException(Exception):
     pass
 
@@ -190,7 +219,7 @@ class RuntimeException(Exception):
     pass
 
 
-class Return(Exception):
+class ParseReturn(Exception):
     pass
 
 
@@ -266,7 +295,7 @@ class Scope:
             if self.inner_scope_status.endswith('.scope'):
                 try:
                     self.inner_scope.add_token(token, interpreter)
-                except Return:
+                except ParseReturn:
                     self.inner_scope.operations.append(EndScope(token))
                     if self.inner_scope_status.startswith('func'):
                         self.operations.append(DeclareFunction(self.inner_scope.name, self.inner_scope))
@@ -303,6 +332,14 @@ class Scope:
             if token == 'while':
                 self.inner_scope = While(token, interpreter)
             return
+        if token in ['return', 'break', 'continue']:
+            if token == 'return':
+                self.operations.append(Return(token))
+            if token == 'break':
+                self.operations.append(Break(token))
+            if token == 'continue':
+                self.operations.append(Continue(token))
+            return
         v = parse_value(token)
         if v is not None:
             self.operations.append(PushValue(token, v))
@@ -317,7 +354,7 @@ class Scope:
                     return
         if token == 'end':
             interpreter.parse_time_func_var_stack.pop()
-            raise Return
+            raise ParseReturn
         raise ParseException(f'Invalid token "{token}"')
 
     def start(self, interpreter: 'Interpreter') -> 'ScopeExecutioner':
@@ -478,7 +515,7 @@ class Interpreter:
     def add_token(self, code: str):
         try:
             self.global_scope.add_token(code, self)
-        except Return:
+        except ParseReturn:
             raise ParseException(f'Cannot end {self.global_scope.name}')
 
     def execute(self, debug=False):
