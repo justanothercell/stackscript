@@ -10,6 +10,7 @@ def is_identifier(token, interpreter, allow_builtin=False) -> bool:
         return token.isidentifier() and token not in interpreter.builtins and token not in ['func', 'while', 'if', 'do',
                                                                                             'end']
 
+
 def get_type(value) -> str:
     print(value, type(value))
     if isinstance(value, bool):
@@ -137,6 +138,27 @@ class Call(Operation):
         raise RuntimeException(f'"{self.name}" could not be found as a valid function or variable')
 
 
+class CallIf(Operation):
+    def __init__(self, name, scope: 'Scope'):
+        super().__init__(name)
+        self.scope = scope
+
+    def execute(self, interpreter: 'Interpreter'):
+        if interpreter.pop_stack(1)[0] == True:  # == True is important else it will let almost anything be True
+            interpreter.scope_stack.append(self.scope.start(interpreter))
+
+
+class CallWhile(Operation):
+    def __init__(self, name, scope: 'Scope'):
+        super().__init__(name)
+        self.scope = scope
+
+    def execute(self, interpreter: 'Interpreter'):
+        if interpreter.pop_stack(1)[0] == True:  # == True is important else it will let almost anything be True
+            interpreter.scope_stack[-1].pointer -= 1
+            interpreter.scope_stack.append(self.scope.start(interpreter))
+
+
 class EndScope(Operation):
     def execute(self, interpreter: 'Interpreter'):
         interpreter.layers.pop()
@@ -228,8 +250,13 @@ class Scope:
                     self.inner_scope.add_token(token, interpreter)
                 except Return:
                     self.inner_scope.operations.append(EndScope(token))
-                    interpreter.parse_time_func_var_stack[-1].append(self.inner_scope.name)
-                    self.operations.append(DeclareFunction(self.inner_scope.name, self.inner_scope))
+                    if self.inner_scope_status.startswith('func'):
+                        interpreter.parse_time_func_var_stack[-1].append(self.inner_scope.name)
+                        self.operations.append(DeclareFunction(self.inner_scope.name, self.inner_scope))
+                    elif self.inner_scope_status.startswith('if'):
+                        self.operations.append(CallIf(self.inner_scope.name, self.inner_scope))
+                    elif self.inner_scope_status.startswith('while'):
+                        self.operations.append(CallWhile(self.inner_scope.name, self.inner_scope))
                     self.inner_scope_status = ''
                     interpreter.tokening_indent -= 1
                     interpreter.console_prefix = '#'
@@ -246,6 +273,14 @@ class Scope:
             interpreter.tokening_indent += 1
             self.inner_scope_status = token
             interpreter.console_prefix = '+'
+            return
+        if token in ['if', 'while']:
+            interpreter.tokening_indent += 1
+            self.inner_scope_status = token + '.scope'
+            if token == 'if':
+                self.inner_scope = If(token, interpreter)
+            if token == 'while':
+                self.inner_scope = While(token, interpreter)
             return
         v = parse_value(token)
         if v is not None:
@@ -293,6 +328,14 @@ class ScopeExecutioner:
 
 
 class Function(Scope):
+    ...
+
+
+class If(Scope):
+    ...
+
+
+class While(Scope):
     ...
 
 
@@ -345,7 +388,7 @@ class Interpreter:
         self.stack = []
         self.layers: list[dict] = []
         self.parse_time_func_var_stack: list[list[str]] = []
-        self.scope_stack = []
+        self.scope_stack: list[ScopeExecutioner] = []
         self.console_prefix = '#'
 
         def call_ref(v):
@@ -438,22 +481,33 @@ class Interpreter:
     def run_repl(self, stack_max=16, debug=False):
         while True:
             try:
-                print(self.console_prefix + ('..' * self.tokening_indent) + ' ', end='')
-                inp = input()
-                self.parse_line(inp)
-                self.execute_all(debug=debug)
-            except (AssertionError, TypeError, ParseException, RuntimeException) as e:
-                sys.stderr.write(str(e) + '\n')
+                try:
+                    print(self.console_prefix + ('..' * self.tokening_indent) + ' ', end='')
+                    inp = input()
+                    self.parse_line(inp)
+                    self.execute_all(debug=debug)
+                except (AssertionError, TypeError, ParseException, RuntimeException) as e:
+                    sys.stderr.write(str(e) + '\n')
+                    sys.stderr.flush()
+                    print('', end='')
+
+                if stack_max > 0 and self.tokening_indent == 0:
+                    print(f'[{"..., " if len(self.stack) > stack_max else ""}'
+                          f'{", ".join(to_str(v, repr_=True) for v in self.stack[-stack_max:])}]')
+            except KeyboardInterrupt:
+                self.layers = [self.layers[0]]
+                self.parse_time_func_var_stack = [self.parse_time_func_var_stack[0]]
+                self.tokening_indent = 0
+                self.console_prefix = '#'
+                self.global_scope = Global('global', self)
+                self.scope_stack = [self.global_scope.start(self)]
+                sys.stderr.write('Crtl+C\n')
                 sys.stderr.flush()
                 print('', end='')
-
-            if stack_max > 0 and self.tokening_indent == 0:
-                print(f'[{"..., " if len(self.stack) > stack_max else ""}'
-                      f'{", ".join(to_str(v, repr_=True) for v in self.stack[-stack_max:])}]')
 
     def pop_stack(self, values):
         assert len(self.stack) >= values, f'Stack has not enough values (found {len(self.stack)}, expected {values})'
         return [self.stack.pop() for _ in range(values)]
 
     def trace(self) -> str:
-        return ' in '.join(f'{f.scope.name}:{type(f.scope).__name__}@{f.pointer}' for f in reversed(self.scope_stack))
+        return ' in '.join(f'{f.scope.name}<{type(f.scope).__name__}>{f.pointer}' for f in reversed(self.scope_stack))
