@@ -416,6 +416,7 @@ class Interpreter:
             'bool': Builtin('bool', 1, lambda v: self.stack.append(True if v == 'true' else False)),
             'type': Builtin('type', 1, lambda v: get_type(v)),
             'str': Builtin('str', 1, lambda v: self.stack.append(to_str(v))),
+            'strlen': Builtin('strlen', 1, lambda v: self.stack.append(len(v))),
             'chr': Builtin('str', 1, lambda v: self.stack.append(ord(v))),
             'ord': Builtin('str', 1, lambda v: self.stack.append(chr(v))),
             'pull': Builtin('pull', 1, lambda v: self.stack.append(self.stack.pop(-v))),
@@ -438,8 +439,8 @@ class Interpreter:
             '>=': Builtin('>=', 2, lambda b, a: self.stack.append(a >= b)),
             '<=': Builtin('<=', 2, lambda b, a: self.stack.append(a <= b)),
             'swap': Builtin('swap', 2, lambda b, a: self.stack.extend((b, a))),
-            'push': Builtin('push', 2, lambda b, a: self.stack.insert(-b, a)),  # dest, obj
-            'chrat': Builtin('chrat', 2, lambda b, a: self.stack.append(a[b])),
+            'push': Builtin('push', 2, lambda b, a: self.stack.insert(-b, a)),  # obj(a) dest (b)
+            'chrat': Builtin('chrat', 2, lambda b, a: self.stack.append(a[b])),  # str(a) index(b)
             'split': Builtin('split', 2, lambda b, a: self.stack.extend((a[:b], a[b:]))),
 
             'sth': Builtin('sth', 3, lambda c, b, a: self.stack.extend((c, a, b))),  # a b c -> c b a
