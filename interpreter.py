@@ -153,6 +153,7 @@ class Scope:
                     self.inner_scope.add_token(token, interpreter)
                 except Return:
                     self.inner_scope.operations.append(EndScope(token))
+                    interpreter.parse_time_func_stack[-1].append(self.inner_scope.name)
                     self.operations.append(DeclareFunction(self.inner_scope.name, self.inner_scope))
                     self.inner_scope_status = ''
                     interpreter.tokening_indent -= 1
@@ -173,9 +174,12 @@ class Scope:
             self.operations.append(interpreter.builtins[token])
             return
         if is_identifier(token, interpreter):
-            self.operations.append(CallFunctionOrVariable(token))
-            return
+            for ptfs in interpreter.parse_time_func_stack:
+                if token in ptfs:
+                    self.operations.append(CallFunctionOrVariable(token))
+                    return
         if token == 'end':
+            interpreter.parse_time_func_stack.pop()
             raise Return
         raise ParseException(f'Invalid token "{token}"')
 
@@ -235,6 +239,7 @@ class Interpreter:
             'out': Builtin('out', 1, lambda v: print(to_str(v), end='')),
             'outln': Builtin('outln', 1, lambda v: print(v)),
             'in': Builtin('in', 1, lambda v: self.stack.append(input(v))),
+            'sqrt': Builtin('in', 1, lambda v: self.stack.append(input(v))),
             'parse': Builtin('parse', 1, lambda v: self.stack.append(parse_value(v))),
             'dup': Builtin('dup', 1, lambda v: self.stack.extend((v, v))),
             'rem': Builtin('rem', 0, lambda v: [self.stack.pop() for _ in range(v)]),
