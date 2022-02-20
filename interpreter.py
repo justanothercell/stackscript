@@ -5,7 +5,7 @@ import codecs
 import shlex
 import sys
 
-keywords = ['func', 'while', 'if', 'else', 'do', 'end', 'store', 'update', 'delete', 'return', 'break', 'continue', 'import']
+keywords = ['func', 'while', 'if', 'else', 'do', 'end', 'store', 'global', 'update', 'delete', 'return', 'break', 'continue', 'import']
 
 
 def is_identifier(token, interpreter, allow_builtin=False) -> bool:
@@ -88,6 +88,14 @@ class Import(Operation):
                 importer.parse(file.read())
             importer.execute_all()
             M.funcs = importer.layers[0]
+            d = []
+            for key, func in M.funcs.items():
+                if isinstance(func, Variable):
+                    if func.is_global:
+                        interpreter.layers[0][key] = func
+                        d.append(key)
+            for k in d:
+                del M.funcs[k]
             interpreter.stack.append(M)
             return
         elif os.path.isfile(path + '.st.py'):  # "std.math" import store math
@@ -98,8 +106,16 @@ class Import(Operation):
             assert hasattr(m, 'export'), f'python based module {module} misses function "export"'
             funcs: dict = m.export()
             M = Module(module, funcs)
-            for func in funcs.values():
-                func.module = M
+            d = []
+            for key, func in M.funcs.items():
+                if isinstance(func, Scope):
+                    func.module = M
+                if isinstance(func, Variable):
+                    if func.is_global:
+                        interpreter.layers[0][key] = func
+                        d.append(key)
+            for k in d:
+                del M.funcs[k]
             interpreter.stack.append(M)
             return
         raise RuntimeException(f'module "{module}" can not be found')
@@ -133,13 +149,14 @@ class StoreVariable(Operation):
         interpreter.layers[-1][self.name] = Variable(self.name, interpreter.pop_stack(1)[0])
 
 
-class \
-        Variable(Operation):
+class GlobalVariable(Operation):
     def __init__(self, name):
         super().__init__(name)
 
     def execute(self, interpreter: 'Interpreter'):
-        interpreter.layers[-1][self.name] = Variable(self.name, interpreter.pop_stack(1)[0])
+        v = Variable(self.name, interpreter.pop_stack(1)[0])
+        v.is_global = True
+        interpreter.layers[0][self.name] = v
 
 
 class UpdateVariable(Operation):
@@ -185,6 +202,7 @@ class Call(Operation):
                 if isinstance(call, Variable):
                     interpreter.stack.append(call.value)
                     return
+                raise RuntimeException(f'Invalid call type "{type(call).__name__}"')
         for layer in reversed(interpreter.layers):
             if self.name in layer:
                 call = layer[self.name]
@@ -288,37 +306,23 @@ class Scope:
         self.operations: list[Operation] = []
         self.inner_scope_status: str = ''
         self.inner_scope: Function = None
-        interpreter.parse_time_func_var_stack.append([])
         self.module: Module = None  # will set upon import if this scope is part of a module
 
     def add_token(self, token: str, interpreter: 'Interpreter'):
         if self.inner_scope_status != '':
-            if self.inner_scope_status in ['store', 'update', 'delete']:
+            if self.inner_scope_status in ['store', 'global', 'update', 'delete']:
                 if is_identifier(token, interpreter):
-                    if self.inner_scope_status == 'delete':
-                        for ptfvs in interpreter.parse_time_func_var_stack:
-                            if token in ptfvs:
-                                self.operations.append(DeleteVariableOrFunc(token))
-                                self.inner_scope_status = ''
-                                interpreter.tokening_indent -= 1
-                                interpreter.console_prefix = '#'
-                                return
+                    if self.inner_scope_status == ['delete', 'update']:
+                        self.operations.append(DeleteVariableOrFunc(token))
                         self.inner_scope_status = ''
                         interpreter.tokening_indent -= 1
                         interpreter.console_prefix = '#'
-                        raise ParseException(f'"{token}" is not an existing identifier and therefore can not be deleted')
-                    if self.inner_scope_status == 'update':
-                        for ptfvs in interpreter.parse_time_func_var_stack:
-                            if token in ptfvs:
-                                break
-                        else:
-                            self.inner_scope_status = ''
-                            interpreter.tokening_indent -= 1
-                            interpreter.console_prefix = '#'
-                            raise ParseException(f'"{token}" is not an existing identifier and therefore can not be updated')
-                    if self.inner_scope_status == 'store':
-                        self.operations.append(StoreVariable(token))
-                        interpreter.parse_time_func_var_stack[-1].append(token)
+                        return
+                    if self.inner_scope_status in ['store', 'global']:
+                        if self.inner_scope_status == 'store':
+                            self.operations.append(StoreVariable(token))
+                        if self.inner_scope_status == 'global':
+                            self.operations.append(GlobalVariable(token))
                     else:
                         self.operations.append(UpdateVariable(token))
                     self.inner_scope_status = ''
@@ -346,7 +350,6 @@ class Scope:
                 if token == 'do':
                     self.inner_scope_status += '.scope'
                     interpreter.console_prefix = '#'
-                    interpreter.parse_time_func_var_stack[-2].append(self.inner_scope.name)
                     return
                 self.inner_scope_status = ''
                 self.inner_scope = None
@@ -386,7 +389,7 @@ class Scope:
         if token.startswith(':') and len(token) > 1:
             self.operations.append(ModuleFunc(token, token[1:]))
             return
-        if token in ['func', 'store', 'update', 'delete']:
+        if token in ['func', 'store', 'global', 'update', 'delete']:
             interpreter.tokening_indent += 1
             self.inner_scope_status = token
             interpreter.console_prefix = '+'
@@ -420,12 +423,9 @@ class Scope:
             self.operations.append(interpreter.builtins[token])
             return
         if is_identifier(token, interpreter):
-            for ptfvs in interpreter.parse_time_func_var_stack:
-                if token in ptfvs:
-                    self.operations.append(Call(token))
-                    return
+            self.operations.append(Call(token))
+            return
         if token == 'end':
-            interpreter.parse_time_func_var_stack.pop()
             raise ParseReturn
         raise ParseException(f'Invalid token "{token}"')
 
@@ -477,6 +477,7 @@ class Variable:
     def __init__(self, name, value):
         self.name = name
         self.value = value
+        self.is_global = False
 
     def __repr__(self):
         return f'Variable[name="{self.name}", value={to_str(self.value, repr_=True)}]'
@@ -559,7 +560,6 @@ class Interpreter:
         self.tokening_indent = 0
         self.stack = []
         self.layers: list[dict] = []
-        self.parse_time_func_var_stack: list[list[str]] = []
         self.scope_stack: list[ScopeExecutioner] = []
         self.console_prefix = '#'
 
@@ -673,7 +673,6 @@ class Interpreter:
                           f'{", ".join(to_str(v, repr_=True) for v in self.stack[-stack_max:])}]')
             except KeyboardInterrupt:
                 self.layers = [self.layers[0]]
-                self.parse_time_func_var_stack = [self.parse_time_func_var_stack[0]]
                 self.tokening_indent = 0
                 self.console_prefix = '#'
                 self.global_scope = Global('global', self)
