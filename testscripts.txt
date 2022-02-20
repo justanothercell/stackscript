@@ -69,3 +69,6 @@ if's:
 func foo do if trace outln end else trace outln end end
 true foo
 false foo
+
+
+"std.test" import store test test :count
