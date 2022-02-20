@@ -23,6 +23,10 @@ def get_type(value) -> str:
         return 'str'
     if isinstance(value, (int, float)):
         return 'float'
+    if isinstance(value, Reference):
+        return 'ref'
+    if isinstance(value, Module):
+        return 'module'
 
 
 def parse_value(token):
@@ -582,16 +586,8 @@ class Interpreter:
             'in': Builtin('in', 1, lambda interpreter, v: interpreter.stack.append(input(v))),
             'exit': Builtin('exit', 1, lambda interpreter, v: exit(v)),
             'sqrt': Builtin('in', 1, lambda interpreter, v: interpreter.stack.append(input(v))),
-            'parse': Builtin('parse', 1, lambda interpreter, v: interpreter.stack.append(parse_value(v))),
             'dup': Builtin('dup', 1, lambda interpreter, v: interpreter.stack.extend((v, v))),
             'rem': Builtin('rem', 0, lambda interpreter, v: [interpreter.stack.pop() for _ in range(v)]),
-            'num': Builtin('num', 1, lambda interpreter, v: interpreter.stack.append(float(v))),
-            'bool': Builtin('bool', 1, lambda interpreter, v: interpreter.stack.append(True if v == 'true' else False)),
-            'type': Builtin('type', 1, lambda interpreter, v: get_type(v)),
-            'str': Builtin('str', 1, lambda interpreter, v: interpreter.stack.append(to_str(v))),
-            'strlen': Builtin('strlen', 1, lambda interpreter, v: interpreter.stack.append(len(v))),
-            'chr': Builtin('str', 1, lambda interpreter, v: interpreter.stack.append(ord(v))),
-            'ord': Builtin('str', 1, lambda interpreter, v: interpreter.stack.append(chr(v))),
             'pull': Builtin('pull', 1, lambda interpreter, v: interpreter.stack.append(interpreter.stack.pop(-v))),
             'import': Import('import'),
             'drop': Builtin('drop', 1, lambda interpreter, v: ()),
@@ -614,8 +610,6 @@ class Interpreter:
             '<=': Builtin('<=', 2, lambda interpreter, b, a: interpreter.stack.append(a <= b)),
             'swap': Builtin('swap', 2, lambda interpreter, b, a: interpreter.stack.extend((b, a))),
             'push': Builtin('push', 2, lambda interpreter, b, a: interpreter.stack.insert(-b, a)),  # obj(a) dest (b)
-            'chrat': Builtin('chrat', 2, lambda interpreter, b, a: interpreter.stack.append(a[b])),  # str(a) index(b)
-            'split': Builtin('split', 2, lambda interpreter, b, a: interpreter.stack.extend((a[:b], a[b:]))),
 
             'sth': Builtin('sth', 3, lambda interpreter, c, b, a: interpreter.stack.extend((c, a, b))),  # a b c -> c b a
         }

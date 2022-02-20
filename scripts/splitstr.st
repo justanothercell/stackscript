@@ -1,21 +1,30 @@
-func splitStr do  // [str, token]
-    0 store index  // [str, token]
-    store token  // [str]
-    store string  // []
+"std.types" import store types
+
+func splitStr do
+    0 store index
+    store token
+    store string
     true while
-        string index chrat  // [string.charAt(index)]
+        string types :strlen 0 = if
+            break
+        end
+        string index types :chrat
         token = if
-            string index split  // ["a", " b"]
-            1 split swap drop  // ["a", "b"]
-            token splitStr  // ["a", "b", "c"]
-            string strlen update index  // ["a", "b", "c"]
+            string index types :splitat
+            1 types :splitat swap drop
+            token splitStr
+            string types :strlen update index
         end
-        index 1 +  // [index+1]
-        dup update index  // [index+1]
-        dup string strlen <  // [bool]
-        swap string strlen = if  // [bool]
-            string swap  // [str, bool]
+        index 1 +
+        dup dup update index
+        string types :strlen >= if
+            string types :strlen = if
+                string break
+            end
+            break
         end
+        drop
+        true
     end
 end
 
