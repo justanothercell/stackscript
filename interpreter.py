@@ -133,6 +133,15 @@ class StoreVariable(Operation):
         interpreter.layers[-1][self.name] = Variable(self.name, interpreter.pop_stack(1)[0])
 
 
+class \
+        Variable(Operation):
+    def __init__(self, name):
+        super().__init__(name)
+
+    def execute(self, interpreter: 'Interpreter'):
+        interpreter.layers[-1][self.name] = Variable(self.name, interpreter.pop_stack(1)[0])
+
+
 class UpdateVariable(Operation):
     def __init__(self, name):
         super().__init__(name)
