@@ -1,3 +1,5 @@
+import sys
+
 import math
 
 from interpreter import Builtin, Variable, Interpreter
@@ -50,16 +52,16 @@ def export():
         'perm': Builtin('perm', 1, lambda interpreter, v: interpreter.stack.append(math.perm(v))),
         'ulp': Builtin('ulp', 1, lambda interpreter, v: interpreter.stack.append(math.ulp(v))),
 
-        'atan2': Builtin('atan2', 1, lambda interpreter, b, a: interpreter.stack.append(math.atan2(a, b))),
-        'comb': Builtin('comb', 1, lambda interpreter, b, a: interpreter.stack.append(math.comb(a, b))),
-        'copysign': Builtin('copysign', 1, lambda interpreter, b, a: interpreter.stack.append(math.copysign(a, b))),
-        'dist': Builtin('dist', 1, lambda interpreter, b, a: interpreter.stack.append(math.dist(a, b))),
-        'fmod': Builtin('fmod', 1, lambda interpreter, b, a: interpreter.stack.append(math.fmod(a, b))),
-        'ldexp': Builtin('ldexp', 1, lambda interpreter, b, a: interpreter.stack.append(math.ldexp(a, b))),
-        'nextafter': Builtin('nextafter', 1, lambda interpreter, b, a: interpreter.stack.append(math.nextafter(a, b))),
-        'pow': Builtin('pow', 1, lambda interpreter, b, a: interpreter.stack.append(math.pow(a, b))),
-        'remainder': Builtin('remainder', 1, lambda interpreter, b, a: interpreter.stack.append(math.remainder(a, b))),
-        'isclose': Builtin('isclose', 1, lambda interpreter, b, a: interpreter.stack.append(math.isclose(a, b))),
+        'atan2': Builtin('atan2', 1, lambda interpreter, a, b: interpreter.stack.append(math.atan2(a, b))),
+        'comb': Builtin('comb', 1, lambda interpreter, a, b: interpreter.stack.append(math.comb(a, b))),
+        'copysign': Builtin('copysign', 1, lambda interpreter, a, b: interpreter.stack.append(math.copysign(a, b))),
+        'dist': Builtin('dist', 1, lambda interpreter, a, b: interpreter.stack.append(math.dist(a, b))),
+        'fmod': Builtin('fmod', 1, lambda interpreter, a, b: interpreter.stack.append(math.fmod(a, b))),
+        'ldexp': Builtin('ldexp', 1, lambda interpreter, a, b: interpreter.stack.append(math.ldexp(a, b))),
+        'nextafter': Builtin('nextafter', 1, lambda interpreter, a, b: interpreter.stack.append(math.nextafter(a, b))),
+        'pow': Builtin('pow', 1, lambda interpreter, a, b: interpreter.stack.append(math.pow(a, b))),
+        'remainder': Builtin('remainder', 1, lambda interpreter, a, b: interpreter.stack.append(math.remainder(a, b))),
+        'isclose': Builtin('isclose', 1, lambda interpreter, a, b: interpreter.stack.append(math.isclose(a, b))),
 
         'pi': Variable('tau', math.pi),
         'e': Variable('tau', math.e),

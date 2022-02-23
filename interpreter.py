@@ -15,6 +15,10 @@ def is_identifier(token, interpreter, allow_builtin=False) -> bool:
         return token.isidentifier() and token not in interpreter.builtins and token not in keywords
 
 
+def lenlist(mylist):
+    return *mylist, len(mylist)
+
+
 def get_type(value) -> str:
     print(value, type(value))
     if isinstance(value, bool):
@@ -27,6 +31,11 @@ def get_type(value) -> str:
         return 'ref'
     if isinstance(value, Module):
         return 'module'
+    if isinstance(value, list):
+        return 'list'
+    if isinstance(value, bytes):
+        return 'bytes'
+    raise TypeError(f'Invalid type {type(value)} for {value}')
 
 
 def parse_value(token):
@@ -54,6 +63,8 @@ def to_str(value, repr_=False) -> str:
             return f'"{codecs.encode(value, "unicode_escape").decode("utf-8")}"'
         else:
             return value
+    if isinstance(value, list):
+        return f'['+', '.join([to_str(v, repr_=repr_) for v in value])+']'
     return str(value)
 
 
@@ -198,15 +209,16 @@ class DeleteVariableOrFunc(Operation):
 class Call(Operation):
     def execute(self, interpreter: 'Interpreter'):
         if interpreter.scope_stack[-1].scope.module is not None:  # the to be updated variable may be part of module
-            if self.name in interpreter.scope_stack[-1].scope.module.funcs:
-                call = interpreter.scope_stack[-1].scope.module.funcs[self.name]
-                if isinstance(call, Function):
-                    interpreter.scope_stack.append(call.start(interpreter))
-                    return
-                if isinstance(call, Variable):
-                    interpreter.stack.append(call.value)
-                    return
-                raise RuntimeException(f'Invalid call type "{type(call).__name__}"')
+            if interpreter.scope_stack[-1].scope.module.funcs is not None:  # called during import: nope, not good
+                if self.name in interpreter.scope_stack[-1].scope.module.funcs:
+                    call = interpreter.scope_stack[-1].scope.module.funcs[self.name]
+                    if isinstance(call, Function):
+                        interpreter.scope_stack.append(call.start(interpreter))
+                        return
+                    if isinstance(call, Variable):
+                        interpreter.stack.append(call.value)
+                        return
+                    raise RuntimeException(f'Invalid call type "{type(call).__name__}"')
         for layer in reversed(interpreter.layers):
             if self.name in layer:
                 call = layer[self.name]
@@ -562,57 +574,15 @@ class Global(Scope):
 class Interpreter:
     def __init__(self):
         self.tokening_indent = 0
-        self.stack = []
+        self.stack = [*sys.argv]
         self.layers: list[dict] = []
         self.scope_stack: list[ScopeExecutioner] = []
         self.console_prefix = '#'
 
-        def call_ref(v):
-            try:
-                v.call(self)
-            except AttributeError:
-                raise TypeError(f'"{v}" is not a reference')
-        self.builtins: dict[str, Builtin] = {
-            'clear': Builtin('clear', 0, lambda interpreter: interpreter.stack.clear()),
-            'dump': Builtin('dump', 0, lambda interpreter: interpreter.stack.append(f'[{", ".join(to_str(v, repr_=True) for v in interpreter.stack)}]')),
-            'trace': Builtin('trace', 0, lambda interpreter: interpreter.stack.append(interpreter.trace())),
-            'stacklen': Builtin('stacklen', 0, lambda interpreter: interpreter.stack.append(len(interpreter.stack))),
-
-            '~': Builtin('~', 1, lambda interpreter, v: interpreter.stack.append(~v)),
-            '!': Builtin('!', 1, lambda interpreter, v: interpreter.stack.append(True if v == 0 else False)),
-            '@': Builtin('@', 1, lambda interpreter, v: call_ref(v)),
-            'out': Builtin('out', 1, lambda interpreter, v: print(to_str(v), end='')),
-            'outln': Builtin('outln', 1, lambda interpreter, v: print(v)),
-            'in': Builtin('in', 1, lambda interpreter, v: interpreter.stack.append(input(v))),
-            'exit': Builtin('exit', 1, lambda interpreter, v: exit(v)),
-            'sqrt': Builtin('in', 1, lambda interpreter, v: interpreter.stack.append(input(v))),
-            'dup': Builtin('dup', 1, lambda interpreter, v: interpreter.stack.extend((v, v))),
-            'rem': Builtin('rem', 0, lambda interpreter, v: [interpreter.stack.pop() for _ in range(v)]),
-            'pull': Builtin('pull', 1, lambda interpreter, v: interpreter.stack.append(interpreter.stack.pop(-v))),
-            'import': Import('import'),
-            'drop': Builtin('drop', 1, lambda interpreter, v: ()),
-
-            '+': Builtin('+', 2, lambda interpreter, b, a: interpreter.stack.append(a + b)),
-            '-': Builtin('-', 2, lambda interpreter, b, a: interpreter.stack.append(a - b)),
-            '*': Builtin('*', 2, lambda interpreter, b, a: interpreter.stack.append(a * b)),
-            '/': Builtin('/', 2, lambda interpreter, b, a: interpreter.stack.append(a / b)),
-            '**': Builtin('**', 2, lambda interpreter, b, a: interpreter.stack.append(a ** b)),
-            '%': Builtin('%', 2, lambda interpreter, b, a: interpreter.stack.append(a % b)),
-            '|': Builtin('|', 2, lambda interpreter, b, a: interpreter.stack.append(a | b)),
-            '^': Builtin('^', 2, lambda interpreter, b, a: interpreter.stack.append(a ^ b)),
-            '&': Builtin('&', 2, lambda interpreter, b, a: interpreter.stack.append(a & b)),
-            '>>': Builtin('>>', 2, lambda interpreter, b, a: interpreter.stack.append(a >> b)),
-            '<<': Builtin('<<', 2, lambda interpreter, b, a: interpreter.stack.append(a << b)),
-            '=': Builtin('=', 2, lambda interpreter, b, a: interpreter.stack.append(a == b)),
-            '>': Builtin('>', 2, lambda interpreter, b, a: interpreter.stack.append(a > b)),
-            '<': Builtin('<', 2, lambda interpreter, b, a: interpreter.stack.append(a < b)),
-            '>=': Builtin('>=', 2, lambda interpreter, b, a: interpreter.stack.append(a >= b)),
-            '<=': Builtin('<=', 2, lambda interpreter, b, a: interpreter.stack.append(a <= b)),
-            'swap': Builtin('swap', 2, lambda interpreter, b, a: interpreter.stack.extend((b, a))),
-            'push': Builtin('push', 2, lambda interpreter, b, a: interpreter.stack.insert(-b, a)),  # obj(a) dest (b)
-
-            'sth': Builtin('sth', 3, lambda interpreter, c, b, a: interpreter.stack.extend((c, a, b))),  # a b c -> c b a
-        }
+        spec = importlib.util.spec_from_file_location("module.name", 'lib/std/builtins.st.py')
+        m = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(m)
+        self.builtins: dict[str, Builtin] = m.export()
 
         self.global_scope = Global('global', self)
         self.scope_stack.append(self.global_scope.start(self))
@@ -623,20 +593,25 @@ class Interpreter:
         except ParseReturn:
             raise ParseException(f'Cannot end {self.global_scope.name}')
 
-    def execute(self, debug=False):
-        operation: Operation = self.scope_stack[-1].get_next()
-        operation.execute(self)
-        if debug:
-            print(f'operation = {operation}')
-            print(f'scope_stack = {self.scope_stack}')
-            print(f'trace = {self.trace()}')
-            print(f'layers = {self.layers}')
-            print(f'stack = {self.stack}')
-            print()
+    def execute(self, debug=False, cmd=False):
+        try:
+            operation: Operation = self.scope_stack[-1].get_next()
+            operation.execute(self)
+            if debug:
+                print(f'operation = {operation}')
+                print(f'scope_stack = {self.scope_stack}')
+                print(f'trace = {self.trace()}')
+                print(f'layers = {self.layers}')
+                print(f'stack = {self.stack}')
+                print()
+        except BaseException:
+            if not cmd:
+                print(f'Error in op "{operation.name}": {self.trace()}')
+            raise
 
-    def execute_all(self, debug=False):
+    def execute_all(self, debug=False, cmd=False):
         while self.scope_stack[-1].has_next():
-            self.execute(debug=debug)
+            self.execute(debug=debug, cmd=cmd)
 
     def parse(self, script: str):
         for line in script.split('\n'):
@@ -656,7 +631,7 @@ class Interpreter:
                     print(self.console_prefix + ('..' * self.tokening_indent) + ' ', end='')
                     inp = input()
                     self.parse_line(inp)
-                    self.execute_all(debug=debug)
+                    self.execute_all(debug=debug, cmd=True)
                 except (AssertionError, TypeError, ParseException, RuntimeException) as e:
                     sys.stderr.write(str(e) + '\n')
                     sys.stderr.flush()
@@ -675,9 +650,15 @@ class Interpreter:
                 sys.stderr.flush()
                 print('', end='')
 
-    def pop_stack(self, values):
+    def pop_stack(self, values) -> list:
         assert len(self.stack) >= values, f'Stack has not enough values (found {len(self.stack)}, expected {values})'
-        return [self.stack.pop() for _ in range(values)]
+        assert values >= 0, 'Can only pop an amount of values >= 0'
+        if values == 0:
+            return []
+        if values == 1:
+            return [self.stack.pop()]
+        # self.stack, v = self.stack[:-values], self.stack[-values:]
+        return list(reversed([self.stack.pop() for _ in range(values)]))
 
     def trace(self) -> str:
         return ' in '.join(f'{f"{f.scope.module.name} :" if f.scope.module is not None else ""}{f.scope.name}<{type(f.scope).__name__}>{f.pointer}' for f in reversed(self.scope_stack))

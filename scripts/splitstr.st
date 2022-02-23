@@ -1,25 +1,24 @@
 "std.types" import store types
 
 func splitStr do
-    0 store index
+    0 store i
     store token
     store string
     true while
-        string types :strlen 0 = if
+        string len 0 = if
             break
         end
-        string index types :chrat
-        token = if
-            string index types :splitat
+        string i index token = if
+            string i types :splitat
             1 types :splitat swap drop
             token splitStr
-            string types :strlen update index
+            string len update i
         end
-        index 1 +
-        dup dup update index
-        string types :strlen >= if
-            string types :strlen = if
-                string break
+        i 1 +
+        dup dup update i
+        string len >= if
+            string len = if
+                string
             end
             break
         end
