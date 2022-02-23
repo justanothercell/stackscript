@@ -2,7 +2,7 @@ droid 48
 
 
 power calculator with in/output:
-"Enter base: " in parse "Enter exponent: " in parse dup sth swap dup sth swap ** sth out " to the power of " out out " is " out outln
+"std.types" import store types "Enter base: " in types :parse "Enter exponent: " in types :parse dup sth swap dup sth swap ** sth out " to the power of " out out " is " out outln
 
 a b
 dup
@@ -69,3 +69,6 @@ if's:
 func foo do if trace outln end else trace outln end end
 true foo
 false foo
+
+
+"std.test" import store test test :count

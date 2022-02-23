@@ -38,7 +38,7 @@ clear
         break
     end
     1 - dup 0 >
-end
+end  // prints: 10 9 8 7 6 5 4
 "" outln
 dump outln
 clear
