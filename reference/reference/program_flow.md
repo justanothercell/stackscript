@@ -77,7 +77,7 @@ true while  // "true" to make sure while is entered
     dup 4 > // true if counter > 4
 end
 ```
-The keywords `break` and `continue` let you exit/jump tot he end of the while loop.
+The keywords `break` and `continue` let you exit/jump to the end of the while loop.
 
 <img align="left" src="break_continue.png">
 
