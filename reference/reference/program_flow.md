@@ -40,7 +40,7 @@ end
 end
 else
     "this will be executed, because" outln
-    the condition returned false" outln
+    "the condition returned false" outln
 end
 ```
 Make sure all paths in/around if/else/etc return the "same state" of stack (aka length and types), so your program can function
