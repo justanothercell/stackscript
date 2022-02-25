@@ -52,22 +52,45 @@ then execute minus, popping `8` and `6` off the stack and returning `2` onto the
 `[276]`<br>
 As we can see the result is `276`! Good job!
 
+```
+// in cnsole, whole code from above:
+# clear
+[]
+# 42 96
+[42, 96]
+# +
+[138]
+# 8 6 - *
+[276]
+#
+```
+
 ---
 ###### Go to [top](#Structure-Syntax--Builtins).
 As you might have seen, the operations pop their arguments off the stack.
 This is less than ideal when it is important to keep the original value for later use.
 We now want to get the quarter of the result of last time, but keep that original value:
 `dup 4 /`. `dup` duplicates the last value onto the stack. We then can add `4` to the stack and divide the duplicated value by it.<br>
-`[276, 69]`<br>
+```
+// in console:
+[276]
+# dup 4 /
+[276, 69.0]
+#
+```
 As you can see, the result is `69` and the original value is still on the stack!
 
 One last function before letting you try soemthing out in your own: `swap`<br>
 As the name implies, `swap` swaps the last two values of the stack. This is importnt for example for the 
 order of division or subraction.<br>
-`swap`<br>
-`[69, 276]`<br>
-`/`<br>
-`[0.25]`<br>
+```
+// in console:
+# swap
+[69.0, 276]
+# /
+[0.25]
+#
+```
 
 ---
 ###### Go to [top](#Structure-Syntax--Builtins).
