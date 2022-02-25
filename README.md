@@ -10,7 +10,7 @@ Stackscript is inspired by [porth](https://gitlab.com/tsoding/porth) by tsoding 
 
 Sadly Github does not support markdown for custom file types :( <br>
 For that reason colored screenshots are appended to the documentation when there's a bit more code.
-ALso Github thinks `.st` files are "[smalltalk](https://en.wikipedia.org/wiki/Smalltalk)" files. That is not true. `.st` stands for stackscript. F for smalltalk.
+ALso Github thinks `.st` files are "[smalltalk](https://en.wikipedia.org/wiki/Smalltalk)" files. That is not true. `.st` stands for stackscript. Github really should be having a feature for custom languages.
 
 ### Run The Interpreter
 Until running scripts from the command line is supported (yk, with a cool `stackscript -r path/tO/myfile.st` or sth like that), just execute either [console.py](console.py) or [from_file.py](from_file.py) to (as the names imply) start either a command line session or run a `.st` respectively. 
