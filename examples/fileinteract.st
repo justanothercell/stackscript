@@ -29,8 +29,12 @@ func test_a do
     myfile :close
 end
 
-//test_w
-//test_r
+// local files have a proceeding slash
 
-test_w
+// uncomment test_w to test writing to files
+// test_w
+// uncomment test_r to test reading to files
+// test_r
+// uncomment test_a to test appending to files
+// test_a
 

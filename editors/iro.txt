@@ -1,0 +1,115 @@
+name               = stackscript
+file_extensions [] = st;
+
+contexts [] {
+   main : context {
+      : pattern {
+         regex          \= (//.*)
+         styles []       = .comment;
+      }
+      : pattern {
+         regex \= (!\B|%\B|&\B|\*\B|\*\*\B|\+\B|-\B|\/\B|<\B|<<\B|<=\B|=\B|>\B|>=\B|>>\B|@\B|\^\B|\|\B|~\B)
+         styles [] = .op;
+      }
+      : pattern {
+         regex \= (break\b|continue\b|delete\b|do\b|else\b|end\b|func\b |global\b|if\b|return\b|store\b|update\b|while\b)
+         styles [] = .special_token;
+      }
+      : pattern {
+         regex \= (clear\b|collect\b|drop\b|dump\b|dup\b|exit\b|expand\b|import\b|in\b|index\b|len\b|out\b|outln\b|pull\b|push\b|rem\b|sqrt\b|stacklen\b|sth\b|swap\b|trace\b)
+         styles [] = .builtin;
+      }
+      : pattern {
+         regex \= (true\b|false\b)
+         styles [] = .constant;
+      }
+      : pattern {
+         regex          \= (\b\d+)
+         styles []       = .number;
+      }
+      : pattern {
+         regex          \= (std\b|math\b|builtins\b|os\b|types\b|io\b)
+         styles []       = .std;
+      }
+      : inline_push {
+         regex          \= (\")
+         styles []       = .string;
+         default_style   = .string
+         : pop {
+            regex       \= (\")
+            styles []    = .string;
+         }
+      }
+      : inline_push {
+         regex          \= (\')
+         styles []       = .string;
+         default_style   = .string
+         : pop {
+            regex       \= (\')
+            styles []    = .string;
+         }
+      }
+      : pattern {
+         regex \= (\b[a-z][a-z0-9]*)
+         styles [] = .keyword;
+      }
+   }
+}
+
+styles [] {
+   .keyword : style {
+      color                 = white
+      ace_scope             = keyword
+      textmate_scope        = keyword
+      pygments_scope        = Keyword
+   }
+   .special_token : style {
+      color                 = purple
+   }
+   .builtin : style {
+      color = "orange" ;
+   }
+   .comment : style {
+      color  = grey
+      italic = true
+      ace_scope             = comment
+      textmate_scope        = comment
+      pygments_scope        = Comment
+   }
+   .number  : style {
+      color                 = cyan
+      ace_scope             = constant.numeric
+      textmate_scope        = constant.numeric
+      pygments_scope        = Number
+   }
+   .constant  : style {
+      color                 = cyan
+      ace_scope             = constant.numeric
+      textmate_scope        = constant.numeric
+      pygments_scope        = Number
+   }
+   .string  : style {
+      color = green
+      ace_scope             = text
+      textmate_scope        = text
+      pygments_scope        = String
+   }
+   .std : style {
+      color                 = red_2
+      ace_scope             = invalid
+      textmate_scope        = invalid
+      pygments_scope        = Generic.Error
+   }
+   .op : style {
+      color                 = yellow
+   }
+   .illegal : style {
+      color                 = white
+      background_color      = red
+      ace_scope             = invalid
+      textmate_scope        = invalid
+      pygments_scope        = Generic.Error
+   }
+}
+
+

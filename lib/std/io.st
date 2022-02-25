@@ -12,7 +12,7 @@ os :O_RDWR os :O_CREAT | store file_read_write_create
 
 func openfile do // [filepath, mode]
     swap abspath swap
-    "std.io.file" import dup 3 push :_open
+    "std.fileio.file" import dup 3 push :_open
 end
 
 func abspath do
