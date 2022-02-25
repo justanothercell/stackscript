@@ -11,7 +11,7 @@ Until running scripts from the command line is supported (yk, with a cool `stack
 
 ### Navigation
 - [Home](README.md)
-- [Intellij Syntax Highlighting](editors/intellijSimpleSyntax.md)
+- [Syntax Highlighting](editors/intellijSimpleSyntax.md)
 - [Language Reference](reference/reference.md)
   - [Syntax & Builtins](reference/reference/structure_syntax_builtins.md)
   - [Program FLow](reference/reference/program_flow.md)
