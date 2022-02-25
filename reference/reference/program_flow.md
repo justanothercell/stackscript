@@ -24,7 +24,7 @@ of scopes can be obtained by using tbe builtin `trace` function, which appends a
 
 An `if` tests whether the topmost value of the stack is `true`. If yes, the if-scope is entered. 
 Scopes are ended by using the keyword `end`. Optionally, you can add an `else`...`end` block 
-directly after the `if`...`end`. Any operations between the if and else will not work.
+directly after the `if`...`end`. Any operations between the if and else will make the else block throw an error.
 
 <img align="left" src="if-else.png">
 
@@ -40,7 +40,7 @@ end
 end
 else
     "this will be executed, because" outln
-    the condition returned false" outln
+    "the condition returned false" outln
 end
 ```
 Make sure all paths in/around if/else/etc return the "same state" of stack (aka length and types), so your program can function
@@ -61,7 +61,7 @@ If you are in "global" scope, ending will result in an error.
 #
 ```
 ---
-###While
+### While
 ###### Go to [top](#Program-Flow).
 While loops work similar to ifs. To be entered, the topmost value on the stack has to be `true` and after the end of
 each body execution, the top of the stack is checked. `false` will exit the `while`, `true` will return to the top. 
@@ -77,7 +77,7 @@ true while  // "true" to make sure while is entered
     dup 4 > // true if counter > 4
 end
 ```
-The keywords `break` and `continue` let you exit/jump tot he end of the while loop.
+The keywords `break` and `continue` let you exit/jump to the end of the while loop.
 
 <img align="left" src="break_continue.png">
 
@@ -102,12 +102,12 @@ end
 
 ---
 
-###Functions
+### Functions
 ###### Go to [top](#Program-Flow).
 
-###### This information also appplies 
+###### This information also applies  to [variables](variables_modules.md#variables).
 
-Function and [variable](variables_modules.md#variables) names may use the [python variable naming rules](https://www.w3schools.com/python/gloss_python_variable_names.asp):
+Function and variable names may use the [python variable naming rules](https://www.w3schools.com/python/gloss_python_variable_names.asp):
 - a-z, A-Z, 0-9 and _
 - has to start with a non-number character
 - no whitespaces/special characters/etc
