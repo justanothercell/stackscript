@@ -1,20 +1,20 @@
-#<a id="top"/>Program Flow
+# Program Flow
 ###### Go back to [README](../../README.md).
 ###### Go back to [reference](../reference.md).
 
 ---
 
-###### Go down to [If - Else](#ifelse).
-###### Go down to [While](#while).
-###### Go down to [Functions](#funcs).
-###### Go down to [Function or Variable Pointers](#fps).
+###### Go down to [If - Else](#If---Else).
+###### Go down to [While](#While).
+###### Go down to [Functions](#Functions).
+###### Go down to [Function or Variable Pointers](#Function-or-Variable-Pointers).
 
 ---
-####Tip:
+#### Tip:
 Pressing <kbd>Crtl</kbd>+<kbd>C</kbd> and then <kbd>Enter</kbd> in the console, will automatically
 return you from any "indent" back to global scope.
-###<a id="ifelse"/> If - Else
-###### Go to [top](#top).
+### If - Else
+###### Go to [top](#Program-Flow).
 
 An `if` tests whether the topmost value of the stack is `true`. If yes, the if-scope is entered. 
 Scopes are ended by using the keyword `end`. Optionally, you can add an `else`...`end` block 
@@ -55,13 +55,13 @@ If you are in "global" scope, ending will result in an error.
 #
 ```
 ---
-###<a id="while"/> While
-###### Go to [top](#top).
+###While
+###### Go to [top](#Program-Flow).
 
 ---
 
-###<a id="funcs"/> Functions
-###### Go to [top](#top).
+###Functions
+###### Go to [top](#Program-Flow).
 
 Functions start with the keyword `func`, then the name, then the keyword `do` and just like if's, end with the keyword `end`.
 As with everything, the indent or line is purely aesthetically and can be written with any number
@@ -103,5 +103,5 @@ I'm in bar
 ```
 ---
 
-###<a id="fps"/> Function or Variable Pointers
-###### Go to [top](#top).
+### Function or Variable Pointers
+###### Go to [top](#Program-Flow).

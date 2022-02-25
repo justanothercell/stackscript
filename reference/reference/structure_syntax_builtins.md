@@ -1,4 +1,4 @@
-#<a id="top"/>Structure, Syntax & Builtins
+# Structure, Syntax & Builtins
 ###### Go back to [README](../../README.md).
 ###### Go back to [reference](../reference.md).
 
@@ -15,7 +15,7 @@ Let's first focus on the normal stack. (You can learn more about variables [here
 You can follow the explanation with the command line interface by executing [console.py](../../console.py).
 
 ---
-###### Go to [top](#top).
+###### Go to [top](#Structure--Syntax---Builtins).
 To add a value to the stack, simply write it and pressing enter:
 `1`<kbd>Enter</kbd><br>
 Valid values are: `ints/floats`, `true/false` and `"strings"`.
