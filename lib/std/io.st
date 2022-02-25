@@ -20,8 +20,3 @@ func abspath do
         os :getcwd swap +
     end
 end
-
-// prints out a * (b + c)
-func foo do  // [a, b, c]
-    + * outln
-end

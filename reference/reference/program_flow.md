@@ -1,6 +1,7 @@
 # Program Flow
 ###### Go back to [README](../../README.md).
 ###### Go back to [reference](../reference.md).
+###### [Previous](structure_syntax_builtins.md) - [Next](variables_modules.md)
 
 ---
 
@@ -37,7 +38,7 @@ else
     the condition returned false" outln
 end
 ```
-Make sure all paths in/around if/else/etc return the "same" kind of stack, so your program can function
+Make sure all paths in/around if/else/etc return the "same state" of stack (aka length and types), so your program can function
 regardless which path is taken.
 
 #### Tip:
@@ -57,13 +58,31 @@ If you are in "global" scope, ending will result in an error.
 ---
 ###While
 ###### Go to [top](#Program-Flow).
+While loops work similar to ifs. To be entered, the topmost value on the stack has to be `true` and after the end of
+each body execution, the top of the stack is checked. `false` will exit the `while`, `true` will return to the top. 
 
+<img align="left" src="while.png">
+
+```
+// count from 10 to 5
+10  // counter
+true while  // "true" to make sure while is entered
+    dup outln
+    1 -
+    dup 4 > // true if counter > 4
+end
+```
 ---
 
 ###Functions
 ###### Go to [top](#Program-Flow).
 
-Functions start with the keyword `func`, then the name, then the keyword `do` and just like if's, end with the keyword `end`.
+Function and [variable](variables_modules.md#variables) names may use the [python variable naming rules](https://www.w3schools.com/python/gloss_python_variable_names.asp):
+- a-z, A-Z, 0-9 and _
+- has to start with a non-number character
+- no whitespaces/special characters/etc
+
+Functions start with the keyword `func`, then the name, then the keyword `do` and just like ifs, end with the keyword `end`.
 As with everything, the indent or line is purely aesthetically and can be written with any number
 of newlines or whitespaces.
 
@@ -105,3 +124,4 @@ I'm in bar
 
 ### Function or Variable Pointers
 ###### Go to [top](#Program-Flow).
+Learn more about [variables](variables_modules.md#variables) here.

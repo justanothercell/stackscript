@@ -1,10 +1,11 @@
 # Structure, Syntax & Builtins
 ###### Go back to [README](../../README.md).
 ###### Go back to [reference](../reference.md).
+###### [Next](program_flow.md)
 
 ---
 
-###### Go down to [builtins](#builtins).
+###### Go down to [Builtins](#Builtins).
 
 ---
 
@@ -15,7 +16,7 @@ Let's first focus on the normal stack. (You can learn more about variables [here
 You can follow the explanation with the command line interface by executing [console.py](../../console.py).
 
 ---
-###### Go to [top](#Structure--Syntax---Builtins).
+###### Go to [top](#Structure-Syntax--Builtins).
 To add a value to the stack, simply write it and pressing enter:
 `1`<kbd>Enter</kbd><br>
 Valid values are: `ints/floats`, `true/false` and `"strings"`.
@@ -34,7 +35,7 @@ Comments are proceeded by `//`, similar to Java/C/C++/C#/js/...<br>
 There are no multiline comments.
 
 ---
-###### Go to [top](#top).
+###### Go to [top](#Structure-Syntax--Builtins).
 Now let's add the two values on the stack. To execute an operation, simply write it: `+`.
 The operation will take as many values as it needs from the stack, in this case two (a + b).
 After the execution of the operation, the result will be appended onto the stack again.<br>
@@ -49,7 +50,7 @@ then execute minus, popping `8` and `6` off the stack and returning `2` onto the
 As we can see the result is `276`! Good job!
 
 ---
-###### Go to [top](#top).
+###### Go to [top](#Structure-Syntax--Builtins).
 As you might have seen, the operations pop their arguments off the stack.
 This is less than ideal when it is important to keep the original value for later use.
 We now want to get the quarter of the result of last time, but keep that original value:
@@ -66,19 +67,19 @@ order of division or subraction.<br>
 `[0.25]`<br>
 
 ---
-###### Go to [top](#top).
+###### Go to [top](#Structure-Syntax--Builtins).
 Take a look at the builtins and try out some calculations to wrap your head around this unusual concept.
-Once you have tried out a bit, go [here](variables_modules.md) for more advanced concepts.
+Once you have tried out a bit, go [here](program_flow.md) for more advanced concepts.
 ---
-###<a id="builtins"/>Builtins
-###### Go to [top](#top).
+### Builtins
+###### Go to [top](#Structure-Syntax--Builtins).
 These operators work exactly like in python, for example: `a b + -> a + b`
 
 `% & * ** + - / < << <= = > >= >> ^ | ~`
 
 Special operators:<br>
 `!` not operator, inverts `true`/`false`<br>
-`@` [function/variable reference](program_flow.md#fps)
+`@` [function/variable reference](program_flow.md#function-or-variable-pointers)
 
 | function  | description |
 | --------- | --------- |
