@@ -1,9 +1,10 @@
 # Examples
+###### Go back to [README](../README.md).
 A random list of examples coded in stackscript. This is neither complete nor bug free,
-but may provide some insight 
-
+but may provide some insight
+[view directory](.)
 
 - [breakreturncontinue.st](breakreturncontinue.st) A random assortment of breaks returns and continues
-- [fileinteract.st](breakreturncontinue.st) Reading, writing and appending to files
-- [splitstr.st](breakreturncontinue.st) An implementation of splitting a str by token. Use `types :split` in code
-- [power.st](breakreturncontinue.st) Interactive power calculator
+- [fileinteract.st](fileinteract.st) Reading, writing and appending to files
+- [splitstr.st](splitstr.st) An implementation of splitting a str by token. Use `types :split` in code
+- [power.st](power.st) Interactive power calculator

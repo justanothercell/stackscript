@@ -1,0 +1,57 @@
+%YAML 1.2
+---
+name: stackscript
+scope: source.stackscript
+file_extensions: [ st ]
+
+contexts:
+  main:
+    - match: '(//.*)'
+      captures:
+        0: comment.stackscript
+    - match: '(!\B|%\B|&\B|\*\B|\*\*\B|\+\B|-\B|\/\B|<\B|<<\B|<=\B|=\B|>\B|>=\B|>>\B|@\B|\^\B|\|\B|~\B)'
+      captures:
+        0: text.stackscript
+    - match: '(break\b|continue\b|delete\b|do\b|else\b|end\b|func\b |global\b|if\b|return\b|store\b|update\b|while\b)'
+      captures:
+        0: text.stackscript
+    - match: '(clear\b|collect\b|drop\b|dump\b|dup\b|exit\b|expand\b|import\b|in\b|index\b|len\b|out\b|outln\b|pull\b|push\b|rem\b|sqrt\b|stacklen\b|sth\b|swap\b|trace\b)'
+      captures:
+        0: text.stackscript
+    - match: '(true\b|false\b)'
+      captures:
+        0: constant.numeric.stackscript
+    - match: '(\b\d+)'
+      captures:
+        0: constant.numeric.stackscript
+    - match: '(std\b|math\b|builtins\b|os\b|types\b|io\b)'
+      captures:
+        0: invalid.stackscript
+    - match: '(\")'
+      captures:
+        0: text.stackscript
+      push:
+        - match: '(\")'
+          pop: true
+          captures:
+            0: text.stackscript
+        - match: '(.)'
+          captures:
+            0: text.stackscript
+    - match: '(\'')'
+      captures:
+        0: text.stackscript
+      push:
+        - match: '(\'')'
+          pop: true
+          captures:
+            0: text.stackscript
+        - match: '(.)'
+          captures:
+            0: text.stackscript
+    - match: '(\b[a-z][a-z0-9]*)'
+      captures:
+        0: keyword.stackscript
+    - match: '(.)'
+      captures:
+        0: text.stackscript

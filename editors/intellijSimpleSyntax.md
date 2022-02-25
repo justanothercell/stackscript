@@ -1,6 +1,6 @@
 # Intellij Syntax Highlighting
-go back to [readme.md](../readme.md)
-
+###### Go back to [README](../README.md).
+###### Go back to [syntax highlighting](syntaxHighlighting.md).
 Open the settings: <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd> or `File -> Settings`
 In the settings,go to `Editor -> File types`.
 
@@ -8,7 +8,7 @@ Add a new "Recognized File Type" and add `*.st` under "File name patterns".
 
 Double click your file type in the list and configure the page as follows:
 
-![](../img/intellij_syntax.png)
+![](intellij_syntax.png)
 
 ### Keywords:
 [[1]](#anchor1) [[2]](#anchor2) [[3]](#anchor3) [[4]](#anchor4)

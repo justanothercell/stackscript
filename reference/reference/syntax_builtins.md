@@ -1,6 +1,0 @@
-# Syntax & Builtins
-
-### Syntax
-
-
-### Builtins

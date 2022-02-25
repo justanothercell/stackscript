@@ -1,0 +1,5 @@
+.keyword {color:#fff; }
+.comment {color:#aaa; font-style: italic; }
+.constant.numeric {color:#aff; }
+.text {color:#070; }
+.invalid {color:#c15; }
