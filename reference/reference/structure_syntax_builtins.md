@@ -22,7 +22,7 @@ libraries, `.st.py`.
 ###### Go to [top](#Structure-Syntax--Builtins).
 To add a value to the stack, simply write it and pressing enter:
 `1`<kbd>Enter</kbd><br>
-Valid values are: `ints/floats`, `true/false` and `"strings"`.
+Valid values are: `ints/floats`, `true/false` and `"strings"/'also strings'`.
 
 The stack shows up as a list by default after every line as a list, the right side representing the top: <br>
 `["path/to/console.py", 1]`
