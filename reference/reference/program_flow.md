@@ -24,7 +24,7 @@ of scopes can be obtained by using tbe builtin `trace` function, which appends a
 
 An `if` tests whether the topmost value of the stack is `true`. If yes, the if-scope is entered. 
 Scopes are ended by using the keyword `end`. Optionally, you can add an `else`...`end` block 
-directly after the `if`...`end`. Any operations between the if and else will not work.
+directly after the `if`...`end`. Any operations between the if and else will make the else block throw an error.
 
 <img align="left" src="if-else.png">
 
