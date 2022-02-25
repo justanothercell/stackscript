@@ -1,5 +1,5 @@
 # Stackscript
-<img align="left" src="reference/example.png">
+<img align="right" src="reference/example.png">
 
 Stackscript is an interpreted [concatinative language](https://en.wikipedia.org/wiki/Concatenative_programming_language),
 written in python 3.10. The language's goal is to be able to (theoretically) function as a general purpose language feature wise.
@@ -10,14 +10,6 @@ Stackscript is inspired by [porth](https://gitlab.com/tsoding/porth) by tsoding 
 
 ### Run The Interpreter
 Until running scripts from the command line is supported (yk, with a cool `stackscript -r path/tO/myfile.st` or sth like that), just execute either [console.py](console.py) or [from_file.py](from_file.py) to (as the name imply) start either a command line session or run a `.st` respectively.
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
 ### Navigation
 - [Home](README.md)
