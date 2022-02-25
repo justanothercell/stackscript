@@ -105,7 +105,7 @@ end
 ### Functions
 ###### Go to [top](#Program-Flow).
 
-###### This information also applies  to [variable](variables_modules.md#variables)
+###### This information also applies  to [variables](variables_modules.md#variables).
 
 Function and variable names may use the [python variable naming rules](https://www.w3schools.com/python/gloss_python_variable_names.asp):
 - a-z, A-Z, 0-9 and _
