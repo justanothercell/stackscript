@@ -14,7 +14,6 @@ ALso Github thinks `.st` files are "[smalltalk](https://en.wikipedia.org/wiki/Sm
 Until running scripts from the command line is supported (yk, with a cool `stackscript -r path/tO/myfile.st` or sth like that), just execute either [console.py](console.py) or [from_file.py](from_file.py) to (as the name imply) start either a command line session or run a `.st` respectively. 
 
 ### Navigation
-- [Home](README.md)
 - [Syntax Highlighting](editors/syntaxHighlighting.md)
 - [Language Reference](reference/reference.md)
   - [Syntax & Builtins](reference/reference/structure_syntax_builtins.md)
