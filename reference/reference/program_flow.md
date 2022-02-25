@@ -14,6 +14,11 @@
 #### Tip:
 Pressing <kbd>Crtl</kbd>+<kbd>C</kbd> and then <kbd>Enter</kbd> in the console, will automatically
 return you from any "indent" back to global scope.
+
+### General info:
+Anytime you create a function, if clause,while loop or similar, you open a scope. Your current location in this stack
+of scopes can be obtained by using tbe builtin `trace` function, which appends a trace string to the stack.
+
 ### If - Else
 ###### Go to [top](#Program-Flow).
 
@@ -72,15 +77,49 @@ true while  // "true" to make sure while is entered
     dup 4 > // true if counter > 4
 end
 ```
+The keywords `break` and `continue` let you exit/jump tot he end of the while loop.
+
+<img align="left" src="break_continue.png">
+
+```
+// stops at 3, skips 7
+11 true while
+    1 -
+    dup 7 = if
+        "skipped 7" outln
+        true   // append true to not exit
+        continue  // skip the rest of this iteration
+    end
+    dup 2 = if  // last one is 3
+        "stopped" outln
+        drop break  // drop counter, break out of loop
+    end
+    dup outln
+    true  // endless loop
+end
+"finished" outln
+```
+
 ---
 
 ###Functions
 ###### Go to [top](#Program-Flow).
 
+###### This information also appplies 
+
 Function and [variable](variables_modules.md#variables) names may use the [python variable naming rules](https://www.w3schools.com/python/gloss_python_variable_names.asp):
 - a-z, A-Z, 0-9 and _
 - has to start with a non-number character
 - no whitespaces/special characters/etc
+- may not override [builtins](structure_syntax_builtins.md#Builtins)
+
+Functions and variables are accessible in the scope they are created in and any nested scopes. They do not have to be
+created in global scope. If two of them exist with the same name, the "nearer" one that was created in the more "inner"
+scope will be called. Functions or variables named the same as an existing one in the same scope will overwrite the
+existing one.
+
+---
+###### Go to [top](#Program-Flow).
 
 Functions start with the keyword `func`, then the name, then the keyword `do` and just like ifs, end with the keyword `end`.
 As with everything, the indent or line is purely aesthetically and can be written with any number
@@ -101,10 +140,13 @@ end
 []
 #
 ```
+
+Similar to `break` and `continue`, `return` can be used to exit out of a function early.
+
 #### Note:
-`foo` and `bar` is woodoo magic, or so i am told /j
+`foo` and `bar` is woodoo magic /j
 #### Tip:
-Pressing <kbd>Enter</kbd> after `func` or the function name will show a different sign than the hashtag
+Pressing <kbd>Enter</kbd> after `func` or after the function name in the console and it will show a different sign than the `#`
 on the left: `+` representing the requirement of providing a name and `.` requiring the keyword `do`.
 The `+` also shows up during interactions with [variables](variables_modules.md#variables) when a variable name is required. 
 ```
@@ -121,7 +163,5 @@ I'm in bar
 #
 ```
 ---
-
-### Function or Variable Pointers
 ###### Go to [top](#Program-Flow).
-Learn more about [variables](variables_modules.md#variables) here.
+Learn about [Variables & Modules](variables_modules.md)

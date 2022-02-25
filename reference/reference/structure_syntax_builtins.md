@@ -69,7 +69,9 @@ order of division or subraction.<br>
 ---
 ###### Go to [top](#Structure-Syntax--Builtins).
 Take a look at the builtins and try out some calculations to wrap your head around this unusual concept.
-Once you have tried out a bit, go [here](program_flow.md) for more advanced concepts.
+
+Once you have tried out a bit, go [here](program_flow.md) to learn about program flow (if, else, while, functions).
+
 ---
 ### Builtins
 ###### Go to [top](#Structure-Syntax--Builtins).
@@ -79,7 +81,7 @@ These operators work exactly like in python, for example: `a b + -> a + b`
 
 Special operators:<br>
 `!` not operator, inverts `true`/`false`<br>
-`@` [function/variable reference](program_flow.md#function-or-variable-pointers)
+`@` [function/variable pointer](variables_modules.md#function-and-variable-pointers)
 
 | function  | description |
 | --------- | --------- |
