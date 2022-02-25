@@ -4,10 +4,28 @@
 
 ---
 
-There are different ways to control the program's flow.
+### If - Else
 
-`if's` test whether the topmost value of the stack is `true`. If yes, the if-scope is entered. 
-Scopes are ended by using the keyword `end`.
+An `if` tests whether the topmost value of the stack is `true`. If yes, the if-scope is entered. 
+Scopes are ended by using the keyword `end`. Optionally, you can add an `else`...`end` block 
+directly after the `if`...`end`. Any operations between the if and else will not work.
 
-<style>p{color:red;}</style>
-<p>hello world</p>
+<img align="left" src="if-else.png">
+
+<br>
+
+```
+true if
+    "this will be executed" outln
+end
+
+
+4 6 * 32 = if
+    "this won't be executed" outln
+    "as 4 * 6 is not 32" outln
+end
+else
+    "this will be executed, because" outln
+    the condition returned false" outln
+end
+```

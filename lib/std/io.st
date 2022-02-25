@@ -20,3 +20,18 @@ func abspath do
         os :getcwd swap +
     end
 end
+
+
+true if
+    "this will be executed" outln
+end
+
+
+4 6 * 32 = if
+    "this won't be executed" outln
+    "as 4 * 6 is not 32" outln
+end
+else
+    "this will be executed, because" outln
+    "the condition returned false" outln
+end
