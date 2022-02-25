@@ -35,7 +35,7 @@ Delete the variable named `x`:
 ```
 delete x
 ```
-Update `mytext` from an inner scope instead of overriding it:
+Update `mytext` from an inner scope instead of creating a new one with the same name:
 ```
 "not wasd any more" update mytext
 ```
