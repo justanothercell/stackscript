@@ -1,7 +1,13 @@
 #<a id="top"/>Structure, Syntax & Builtins
 ###### Go back to [README](../../README.md).
 ###### Go back to [reference](../reference.md).
-###### Go to [builtins](#builtins).
+
+---
+
+###### Go down to [builtins](#builtins).
+
+---
+
 ### Structure & Syntax
 Stackscript is made of two main components: the stack and the... variable stack.
 Let's first focus on the normal stack. (You can learn more about variables [here](variables_modules.md))
