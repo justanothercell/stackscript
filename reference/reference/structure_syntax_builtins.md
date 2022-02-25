@@ -30,6 +30,9 @@ Tokens are separated by either whitespace or a newline. That means you can write
 `42 96`. This will push both values onto the stack.<br>
 `[42, 96]`
 
+Comments are proceeded by `//`, similar to Java/C/C++/C#/js/...<br>
+There are no multiline comments.
+
 ---
 ###### Go to [top](#top).
 Now let's add the two values on the stack. To execute an operation, simply write it: `+`.
@@ -66,15 +69,16 @@ order of division or subraction.<br>
 ###### Go to [top](#top).
 Take a look at the builtins and try out some calculations to wrap your head around this unusual concept.
 Once you have tried out a bit, go [here](variables_modules.md) for more advanced concepts.
-
+---
 ###<a id="builtins"/>Builtins
+###### Go to [top](#top).
 These operators work exactly like in python, for example: `a b + -> a + b`
 
 `% & * ** + - / < << <= = > >= >> ^ | ~`
 
 Special operators:<br>
 `!` not operator, inverts `true`/`false`<br>
-`@` function reference
+`@` [function/variable reference](program_flow.md#fps)
 
 | function  | description |
 | --------- | --------- |

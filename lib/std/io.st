@@ -21,17 +21,7 @@ func abspath do
     end
 end
 
-
-true if
-    "this will be executed" outln
-end
-
-
-4 6 * 32 = if
-    "this won't be executed" outln
-    "as 4 * 6 is not 32" outln
-end
-else
-    "this will be executed, because" outln
-    "the condition returned false" outln
+// prints out a * (b + c)
+func foo do  // [a, b, c]
+    + * outln
 end
