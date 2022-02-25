@@ -61,7 +61,7 @@ If you are in "global" scope, ending will result in an error.
 #
 ```
 ---
-###While
+### While
 ###### Go to [top](#Program-Flow).
 While loops work similar to ifs. To be entered, the topmost value on the stack has to be `true` and after the end of
 each body execution, the top of the stack is checked. `false` will exit the `while`, `true` will return to the top. 
@@ -102,7 +102,7 @@ end
 
 ---
 
-###Functions
+### Functions
 ###### Go to [top](#Program-Flow).
 
 ###### This information also appplies 
