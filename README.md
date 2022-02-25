@@ -11,7 +11,7 @@ For that reason colored screenshots are appended to the documentation when there
 ALso Github thinks `.st` files are "[smalltalk](https://en.wikipedia.org/wiki/Smalltalk)" files. That is not true. `.st` stands for stackscript. F for smalltalk.
 
 ### Run The Interpreter
-Until running scripts from the command line is supported (yk, with a cool `stackscript -r path/tO/myfile.st` or sth like that), just execute either [console.py](console.py) or [from_file.py](from_file.py) to (as the name imply) start either a command line session or run a `.st` respectively. 
+Until running scripts from the command line is supported (yk, with a cool `stackscript -r path/tO/myfile.st` or sth like that), just execute either [console.py](console.py) or [from_file.py](from_file.py) to (as the names imply) start either a command line session or run a `.st` respectively. 
 
 ### Navigation
 - [Syntax Highlighting](editors/syntaxHighlighting.md)
