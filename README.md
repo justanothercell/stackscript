@@ -10,6 +10,7 @@ Stackscript is inspired by [porth](https://gitlab.com/tsoding/porth) by tsoding 
 ### Run The Interpreter
 Until running scripts from the command line is supported (yk, with a cool `stackscript -r path/tO/myfile.st` or sth like that), just execute either [console.py](console.py) or [from_file.py](from_file.py) to (as the name imply) start either a command line session or run a `.st` respectively. 
 
+
 ### Navigation
 - [Home](README.md)
 - [Intellij Syntax Highlighting](editors/intellijSimpleSyntax.md)
