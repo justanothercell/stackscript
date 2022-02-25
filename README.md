@@ -6,6 +6,10 @@ Although the language "probably" won't change much syntax wise, it is always pos
 
 Stackscript is inspired by [porth](https://gitlab.com/tsoding/porth) by tsoding [twitch](https://www.twitch.tv/tsoding) / [youtube](https://www.youtube.com/c/TsodingDaily), which is way better and acutally compiled to machine code.
 
+Sadly Github does not support markdown for custom file types :( <br>
+For that reason colored screenshots are appended to the documentation when there's a bit more code.
+ALso Github thinks `.st` files are "[smalltalk](https://en.wikipedia.org/wiki/Smalltalk)" files. That is not true. `.st` stands for stackscript. F for smalltalk.
+
 ### Run The Interpreter
 Until running scripts from the command line is supported (yk, with a cool `stackscript -r path/tO/myfile.st` or sth like that), just execute either [console.py](console.py) or [from_file.py](from_file.py) to (as the name imply) start either a command line session or run a `.st` respectively. 
 
