@@ -25,7 +25,7 @@ To add a value to the stack, simply write it and pressing enter:
 Valid values are: `ints/floats`, `true/false` and `"strings"/'also strings'`.
 
 The stack shows up as a list by default after every line as a list, the right side representing the top: <br>
-(The command line arguments, currently only path to interpreter, are on the stack by default but can either be removed by `drop` or `clear`<br>
+(The command line arguments, currently only path to interpreter, are on the stack by default but can either be removed by `drop` or `clear`)<br>
 `["path/to/console.py", 1]`<br>
 The command line arguments (here only the paht of the executed file) are on the stack by default.
 If you want to clear the stack, simply write `clear`.<br>
