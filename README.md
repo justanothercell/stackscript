@@ -14,25 +14,45 @@ Until running scripts from the command line is supported (yk, with a cool `stack
 - [Intellij Syntax Highlighting](editors/intellijSimpleSyntax.md)
 - [Language Reference](reference/reference.md)
   - [Syntax & Builtins](reference/reference/structure_syntax_builtins.md)
-  - [Modules](reference/reference/variables_modules.md)
+  - [Program FLow](reference/reference/program_flow.md)
+  - [Variables & Modules](reference/reference/variables_modules.md)
 - [Examples](examples/examples.md)
   
 ### TODO:
-- General TODO's:
+<details>
+<summary>General TODO's</summary>
+
   - [ ] make a logo
   - [ ] restructure / refactor a lot
   - [ ] create/fix a bunch of examples
   - [ ] find out what's important to do next
-- Language features
-  - [ ] imports from local scope files
+</details>
+
+<details>
+<summary>Language features</summary>
+
+  - [x] modules
+  - [ ] imports from local scope files ("relative imports"?)
+  - [x] convert builtins to module that's imported automatically
+  - standard modules
+    - [x] math
+    - [x] types
+    - [x] os
+    - io:
+      - [x] file
+      - [ ] networking
   - [ ] simple gfx/window module to draw on canvas for example
   - [ ] consistent error throwing
   - [ ] error handling try/except, etc
   - [ ] support for "instant key input" without the need to press enter (as used in vim for example)
   - [ ] map python's sqlite3 to a stackscript module (most likely just named "sql")
-  - [ ]
-- Documentation
+</details>
+
+<details>
+<summary>Documentation</summary>
+
   - [x] figure out structure
   - [x] first draft
-  - [ ] finish the first version
+  - [x] finish the first version
   - [ ] keep it up to date
+</details>

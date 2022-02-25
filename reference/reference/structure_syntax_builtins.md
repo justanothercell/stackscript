@@ -15,6 +15,9 @@ Let's first focus on the normal stack. (You can learn more about variables [here
 
 You can follow the explanation with the command line interface by executing [console.py](../../console.py).
 
+A stackscript file typically ends with `.st`, or in case of [modules](variables_modules.md#modules) that map python
+libraries, `.st.py`.
+
 ---
 ###### Go to [top](#Structure-Syntax--Builtins).
 To add a value to the stack, simply write it and pressing enter:
@@ -92,7 +95,7 @@ Special operators:<br>
 | dump      | appends a string representation of itself to the stack |
 | dup       | a -> a, a |
 | exit      | a -> exit(a) |
-| import    | imports [module](variables_modules.md) |
+| import    | imports [module](variables_modules.md#Modules) |
 | in        | a -> input(a) |
 | index     | a, i -> a[i] (works for array/str) |
 | len       | a -> len(a) |
