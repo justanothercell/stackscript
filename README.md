@@ -1,4 +1,5 @@
 # Stackscript
+<img align="left" src="reference/example.png">
 Stackscript is an interpreted [concatinative language](https://en.wikipedia.org/wiki/Concatenative_programming_language),
 written in python 3.10. The language's goal is to be able to (theoretically) function as a general purpose language feature wise.
 
