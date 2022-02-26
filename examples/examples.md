@@ -8,3 +8,4 @@ but may provide some insight
 - [fileinteract.st](fileinteract.st) Reading, writing and appending to files
 - [splitstr.st](splitstr.st) An implementation of splitting a str by token. Use `types :split` in code
 - [power.st](power.st) Interactive power calculator
+- [rule30.st](rule30.st) Implementation of [rule 30](https://mathworld.wolfram.com/CellularAutomaton.html).

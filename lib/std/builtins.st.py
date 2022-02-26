@@ -27,7 +27,7 @@ def export():
         'exit': Builtin('exit', 1, lambda interpreter, v: exit(v)),
         'sqrt': Builtin('in', 1, lambda interpreter, v: interpreter.stack.append(input(v))),
         'dup': Builtin('dup', 1, lambda interpreter, v: interpreter.stack.extend((v, v))),
-        'rem': Builtin('rem', 0, lambda interpreter, v: [interpreter.stack.pop() for _ in range(v)]),
+        'rem': Builtin('rem', 1, lambda interpreter, v: [interpreter.stack.pop() for _ in range(v)]),
         'pull': Builtin('pull', 1, lambda interpreter, v: interpreter.stack.append(interpreter.stack.pop(-v))),
         'import': Import('import'),
         'expand': Builtin('expand', 1, lambda interpreter, v: interpreter.stack.extend(lenlist(v))),

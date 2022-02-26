@@ -283,8 +283,6 @@ class Return(Operation):
         while not isinstance(popped.scope, Function):
             interpreter.layers.pop()
             popped = interpreter.scope_stack.pop()
-        else:
-            raise RuntimeException('"Can not use "return" outside of "function"')
 
 
 class Break(Operation):
@@ -295,8 +293,6 @@ class Break(Operation):
             interpreter.layers.pop()
             popped = interpreter.scope_stack.pop()
             interpreter.scope_stack[-1].pointer += 1
-        else:
-            raise RuntimeException('"Can not use "break" outside of "while"')
 
 
 class Continue(Operation):
@@ -306,8 +302,6 @@ class Continue(Operation):
         while not isinstance(popped.scope, While):
             interpreter.layers.pop()
             popped = interpreter.scope_stack.pop()
-        else:
-            raise RuntimeException('"Can not use "continue" outside of "while"')
 
 
 class ParseException(Exception):

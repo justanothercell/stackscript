@@ -10,4 +10,4 @@ def run_file(file: str, debug=False):
 
 if __name__ == '__main__':
     # run_file('scripts/power.st', debug=False)
-    run_file('examples/splitstr.st', debug=False)
+    run_file('examples/rule30.st', debug=False)
