@@ -2,7 +2,8 @@
 <img align="right" src="reference/example.png">
 
 Stackscript is an interpreted [concatinative language](https://en.wikipedia.org/wiki/Concatenative_programming_language),
-written in python 3.10. The language's goal is to be able to (theoretically) function as a general purpose language feature wise.
+written in python 3.10. The language's goal is to be able to (theoretically) function as a general purpose language feature wise. It was coded in seven days or less,
+as it is customary for world changing innovations.
 
 Although the language "probably" won't change much syntax wise, it is always possible that old code breaks, especially modules as some functions might be changed or transferred into other modules or to and from the builtins.
 
