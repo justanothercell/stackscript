@@ -166,6 +166,7 @@ func game do
             "Gold picked up: " + coins types :str + outln
             true while
                 inch expand drop dup
+                dup 3 = if 0 exit end  // exit on Crtl+C
                 13 = swap 32 = | !
             end
             return
