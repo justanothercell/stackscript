@@ -604,8 +604,9 @@ class Interpreter:
                 print(f'layers = {self.layers}')
                 print(f'stack = {self.stack}')
                 print()
-        except BaseException:
+        except Exception:
             if not cmd:
+                print(f'[{", ".join(to_str(v, repr_=True) for v in self.stack)}]')
                 print(f'Error in op "{operation.name}": {self.trace()}')
             raise
 

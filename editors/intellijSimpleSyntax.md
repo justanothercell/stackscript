@@ -34,6 +34,7 @@ Double click your file type in the list and configure the page as follows:
     sth
     swap
     trace
+    int
 #### <a id="anchor2"/>[2]
     break
     continue

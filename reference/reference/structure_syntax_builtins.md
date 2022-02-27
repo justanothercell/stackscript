@@ -132,3 +132,4 @@ Special operators:<br>
 | sth       | a, b, c -> c, a, b |
 | swap      | a, b -> b, a |
 | trace     | adds a function trace string onto the stack |
+| int       | a -> (int)a  (works for: int, float, bool) |
