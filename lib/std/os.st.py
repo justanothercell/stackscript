@@ -1,9 +1,23 @@
 import sys
 
 import os
+from ctypes import windll, c_short
+
+from _ctypes import Structure
 
 from interpreter import Builtin, get_type, parse_value, to_str, Variable, lenlist
 
+def set_cmd_cur_pos(x, y):
+    STD_OUTPUT_HANDLE = -11
+
+    class COORD(Structure):
+        pass
+
+    COORD._fields_ = [("X", c_short), ("Y", c_short)]
+
+
+    h = windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
+    windll.kernel32.SetConsoleCursorPosition(h, COORD(x, y))
 
 def export(): # TODO: stat calls (~2-3), waitstatus to exitcode, get_handle_Inheritable, scandir, walk, _walk, fdopen add_dll_directory _fspath
     values = {
@@ -24,6 +38,7 @@ def export(): # TODO: stat calls (~2-3), waitstatus to exitcode, get_handle_Inhe
         'access': Builtin('access', 2, lambda interpreter, a, b: interpreter.stack.append(os.access(a, b))),
         'chdir': Builtin('chdir', 1, lambda interpreter, v: os.chdir(v)),
         'chmod': Builtin('chmod', 2, lambda interpreter, a, b: os.chmod(a, b)),
+        'cmdcurpos': Builtin('cmdcurpos', 2, lambda interpreter, a, b: set_cmd_cur_pos(a, b)),
         'link': Builtin('link', 2, lambda interpreter, a, b: os.link(a, b)),
         'mkdir': Builtin('mkdir', 2, lambda interpreter, a, b: os.mkdir(a, b)),
         'readlink': Builtin('readlink', 1, lambda interpreter, v: interpreter.stack.append(str(os.readlink(v)))),
