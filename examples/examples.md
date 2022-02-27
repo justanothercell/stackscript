@@ -15,7 +15,7 @@ To run a file, execute [from_file.py](../from_file.py), inputting the correct fi
 - [game.st](game.st) :sparkles:Adventurica:sparkles: game
 
 <img width="50%" height="50%" align="left" src="game_img/start.png">
-<img width="50%" height="50%" align="left" src="game_img/game1.png">
+<img width="50%" height="50%" align="right" src="game_img/game1.png">
 <br>
 <img width="50%" height="50%" align="left" src="game_img/game2.png">
-<img width="50%" height="50%" align="left" src="game_img/end.png">
+<img width="50%" height="50%" align="right" src="game_img/end.png">
