@@ -14,8 +14,8 @@ To run a file, execute [from_file.py](../from_file.py), inputting the correct fi
 - [rule30.st](rule30.st) Implementation of [rule 30](https://mathworld.wolfram.com/CellularAutomaton.html).
 - [game.st](game.st) :sparkles:Adventurica:sparkles: game
 
-<img width="49%" height="49%" align="left" src="game_img/start.png">
-<img width="49%" height="49%" align="right" src="game_img/game1.png">
+<img width="48%" height="48%" align="left" src="game_img/start.png">
+<img width="48%" height="48%" align="right" src="game_img/game1.png">
 <br>
-<img width="49%" height="49%" align="left" src="game_img/game2.png">
-<img width="49%" height="49%" align="right" src="game_img/end.png">
+<img width="48%" height="48%" align="left" src="game_img/game2.png">
+<img width="48%" height="48%" align="right" src="game_img/end.png">
