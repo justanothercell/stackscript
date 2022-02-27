@@ -17,6 +17,7 @@ To run a file, execute [from_file.py](../from_file.py), inputting the correct fi
 <img width="48%" height="48%" align="left" src="game_img/start.png">
 <img width="48%" height="48%" align="right" src="game_img/game1.png">
 <br>
+
 <br>
 <img width="48%" height="48%" align="left" src="game_img/game2.png">
 <img width="48%" height="48%" align="right" src="game_img/end.png">
