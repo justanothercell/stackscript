@@ -92,27 +92,26 @@ func draw do
     0 store y
     ""
     y ysize < while
-        0 store x
+        -1 store x
         x xsize < while
-            x xpos = y ypos = & if "[]" end
+            x 1 + update x
+            x xsize < ! if break end
+
+            x xpos = y ypos = & if "[]" + true continue end
             else
                 x y gettile
-                dup 0 = if ".." swap end
-                dup 1 = if "##" swap end
-                dup 2 = if "@@" swap end
-                dup 3 = if "<>" swap end
-                dup 4 = if x y 5 settile "**" swap end
-                dup 5 = if x y 6 settile "^^" swap end
-                dup 6 = if x y 0 settile "''" swap end
-                dup 14 = if x y 4 settile "**" swap end
-                dup 17 = if x y 7 settile "><" swap end
+                dup 0 = if "  " swap drop + true continue end
+                dup 1 = if "##" swap drop + true continue end
+                dup 2 = if "@@" swap drop + true continue end
+                dup 3 = if "<>" swap drop + true continue end
+                dup 4 = if x y 5 settile "**" swap drop + true continue end
+                dup 5 = if x y 6 settile "^^" swap drop + true continue end
+                dup 6 = if x y 0 settile "''" swap drop + true continue end
+                dup 14 = if x y 4 settile "**" swap drop + true continue end
+                dup 17 = if x y 7 settile "><" swap drop + true continue end
                 // has to be last
-                dup 7 = if x y   dobomb "><" swap end
-                drop
+                dup 7 = if x y   dobomb "><" swap drop + true continue end
             end
-            +
-            x 1 + update x
-            x xsize <
         end
         "\n" +
         y 1 + update y
@@ -190,26 +189,20 @@ func dobomb do  // x, y
 end
 
 func bomb do  // x, y
-    store y
-    store x
-    x y wrapcoords gettile 3 = if
-        x y wrapcoords 7 settile
-    end
-    else
-        x y wrapcoords 4 settile
-    end
+    wrapcoords
+    swap dup sth swap dup sth // duplicate coords
+    gettile 3 = if 7 end
+    else 4 end
+    settile
 end
 
 // "bomb down"
 func bombd do  // x, y
-    store y
-    store x
-    x y wrapcoords gettile 3 = if
-        x y wrapcoords 17 settile
-    end
-    else
-        x y wrapcoords 14 settile
-    end
+    wrapcoords
+    swap dup sth swap dup sth // duplicate coords
+    gettile 3 = if 17 end
+    else 14 end
+    settile
 end
 
 // attention, this inout doesnt work in pycharm, execute in normal console instead!

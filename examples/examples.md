@@ -13,7 +13,3 @@ To run a file, execute [from_file.py](../from_file.py), inputting the correct fi
 - [power.st](power.st) Interactive power calculator
 - [rule30.st](rule30.st) Implementation of [rule 30](https://mathworld.wolfram.com/CellularAutomaton.html).
 - [game.st](game.st) :sparkles:Adventurica:sparkles: game
-
-![](game_img/start.png)
-![](game_img/game.png)
-![](game_img/end.png)
