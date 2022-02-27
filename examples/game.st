@@ -1,7 +1,5 @@
 "std" import drop
 
-clear
-
 func getaction do
     inch types :bints expand drop
     dup 3 = if 0 exit end  // exit on Crtl+C
@@ -15,38 +13,55 @@ func getaction do
     -1
 end
 
-51 store xsize
-21 store ysize
+func start do
+    clear
 
-4 store xpos
-4 store ypos
+    // https://patorjk.com/software/taag
+    "     _       _                 _              _           \n"
+    "    / \\   __| |_   _____ _ __ | |_ _   _ _ __(_) ___ __ _ \n" +
+    "   / _ \\ / _` \\ \\ / / _ \\ '_ \\| __| | | | '__| |/ __/ _` |\n" +
+    "  / ___ \\ (_| |\\ V /  __/ | | | |_| |_| | |  | | (_| (_| |\n" +
+    " /_/   \\_\\__,_| \\_/ \\___|_| |_|\\__|\\__,_|_|  |_|\\___\\__,_|\n" +
+    "     A game made in stackscript for testing purposes,\n" +
+    "           and sounds way cooler than it is." +
+    store title
 
-10 store maxhp
-maxhp store hp
-0 store coins
+    51 global xsize
+    21 global ysize
 
-1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 0 0 0 1  1 xsize collect
-1 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
-1 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
-1 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 3 0   0 0 0 0 0 2 0 0 0 0   0 0 0 1 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
-1 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
-1 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 0 0 0 0 0 0   0 0 0 0 0 2 2 2 0 0  1 xsize collect
-1 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 2 0   0 0 0 0 0 0 0 3 0 0   0 0 0 1 2 2 0 0 0 0   0 0 0 0 0 2 2 2 0 0  1 xsize collect
-1 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 2 2 2 0 0 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
-1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 0 0 0 0 0   0 0 0 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1  1 xsize collect
-0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 1   0 0 0 0 0 0 0 0 0 0   0 0 0 1 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
-0 0 0 0 0 0 0 2 0 0   0 0 0 0 0 0 0 0 0 1   0 0 2 0 0 0 0 0 3 0   0 0 0 0 0 0 0 3 3 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
-0 0 0 0 3 0 0 0 0 0   0 0 0 0 0 0 0 0 0 1   0 0 0 2 0 0 0 0 0 0   0 0 0 0 0 0 3 0 0 3   3 3 0 0 0 0 3 3 0 3  1 xsize collect
-0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 2 0 0 0 1   0 0 0 0 0 0 0 0 0 0   0 0 0 0 3 3 2 2 0 0   0 0 3 3 3 3 0 0 3 0  1 xsize collect
-0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 1   0 0 2 0 0 0 0 0 0 0   0 0 0 1 0 2 2 2 2 2   0 0 0 0 0 0 0 0 0 0  1 xsize collect
-1 1 1 1 1 0 0 0 0 0   0 0 1 0 0 0 0 0 0 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1  1 xsize collect
-0 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 1 2 2 2 0   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
-0 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 1 2 2 2 3   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
-0 0 0 2 0 0 0 0 0 0   0 0 1 0 0 3 0 0 0 0   0 2 2 0 0 1 2 2 0 2   0 0 0 0 0 3 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
-0 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 2 2 2 0 1 2 0 3 0   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
-0 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   2 2 2 2 0 1 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
-1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 0 0 0 1  1 xsize collect
-ysize collect store map
+    4 global xpos
+    4 global ypos
+
+    10 global maxhp
+    maxhp global hp
+    0 global coins
+
+    1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 0 0 0 1  1 xsize collect
+    1 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
+    1 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 0 0 0 0 0 0   3 0 0 0 0 0 0 0 0 0  1 xsize collect
+    1 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 3 0   0 0 0 0 0 2 0 0 0 0   0 0 0 1 0 0 2 0 2 3   0 3 0 0 0 3 0 0 0 0  1 xsize collect
+    1 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 2 2 2 3 3 2   2 0 3 3 3 0 0 0 0 0  1 xsize collect
+    1 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 2 3 2 3 2 2   2 3 0 0 0 2 2 2 0 0  1 xsize collect
+    1 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 2 0   0 0 0 0 0 0 0 3 0 0   0 0 0 1 2 2 3 2 2 2   3 2 0 0 0 2 2 2 0 0  1 xsize collect
+    1 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 1 2 2 2 2 2 2   2 2 0 0 0 0 0 0 0 0  1 xsize collect
+    1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 0 0 0 0 0   0 0 0 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1  1 xsize collect
+    0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 1   0 0 0 0 0 0 0 0 0 0   0 0 0 1 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
+    0 0 0 0 0 0 0 2 0 0   0 0 0 0 0 0 0 0 0 1   0 0 2 0 0 0 0 0 3 0   0 0 0 0 0 0 0 3 3 0   0 0 0 0 0 0 0 0 0 0  1 xsize collect
+    0 0 0 0 3 0 0 0 0 0   0 0 0 0 0 0 0 0 0 1   0 0 0 2 0 0 0 0 0 0   0 0 0 0 0 0 3 0 0 3   3 3 0 0 0 0 3 3 0 3  1 xsize collect
+    0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 2 0 0 0 1   0 0 0 0 0 0 0 0 0 0   0 0 0 0 3 3 2 2 0 0   0 0 3 3 3 3 0 0 3 0  1 xsize collect
+    0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 1   0 0 2 0 0 0 0 0 0 0   0 0 0 1 0 2 2 2 2 2   0 0 0 0 0 0 0 0 0 0  1 xsize collect
+    1 1 1 1 1 0 0 0 0 0   0 0 1 0 0 0 0 0 0 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1  1 xsize collect
+    0 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 1 2 3 3 0   2 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
+    0 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 0 0 0 0 1 3 2 2 3   2 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
+    0 0 0 2 0 0 0 0 0 0   0 0 1 0 0 3 0 0 0 0   0 2 2 0 0 1 2 3 0 2   0 0 0 0 0 3 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
+    0 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   0 2 2 2 0 1 3 2 3 0   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
+    0 0 0 0 0 0 0 0 0 0   0 0 1 0 0 0 0 0 0 0   2 2 2 2 0 1 2 2 0 0   0 0 0 0 0 0 0 0 0 0   0 0 0 0 0 0 0 0 0 0  0 xsize collect
+    1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 1 1 1 1   1 1 1 1 1 1 0 0 0 1  1 xsize collect
+
+    ysize collect global map
+
+    game
+end
 
 func wrapcoords do  // x, y
     dup 0 <      if drop ysize 1 - end
@@ -103,7 +118,7 @@ func draw do
         y 1 + update y
         y ysize <
     end
-    "\nhp: [" + "|" hp int * + "-" maxhp hp - * +
+    "\n " + name + " hp: [" + "|" hp int * + "-" maxhp hp - * +
     "]    coins: " + coins types :str +
     0 0 os :cmdcurpos
     outln
@@ -111,6 +126,8 @@ end
 
 func game do
     "cls" os :system drop
+    title
+    "\n\nEnter adventurer's name: " + in global name
     draw
     true while
         getaction dup 0 >= if
@@ -140,6 +157,19 @@ func game do
             hp 1 - update hp
         end
         draw
+        hp 0 <= if
+            0 0 os :cmdcurpos
+            "cls" os :system drop
+            title
+            "\n\nYou died! Press space/enter to restart!\n\n" +
+            "And so the adventure of " + name + " ends...\n" +
+            "Gold picked up: " + coins types :str + outln
+            true while
+                inch expand drop dup
+                13 = swap 32 = | !
+            end
+            return
+        end
         true
     end
 end
@@ -182,4 +212,7 @@ func bombd do  // x, y
 end
 
 // attention, this inout doesnt work in pycharm, execute in normal console instead!
-game
+true while
+    start
+    true
+end

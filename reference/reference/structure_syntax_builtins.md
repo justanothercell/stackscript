@@ -133,3 +133,4 @@ Special operators:<br>
 | swap      | a, b -> b, a |
 | trace     | adds a function trace string onto the stack |
 | int       | a -> (int)a  (works for: int, float, bool) |
+| inch      | single character input. Does not wait for <kbd>Enter</kbd> to be pressed |

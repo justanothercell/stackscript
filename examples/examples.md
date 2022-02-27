@@ -12,4 +12,10 @@ To run a file, execute [from_file.py](../from_file.py), inputting the correct fi
 - [splitstr.st](splitstr.st) An implementation of splitting a str by token. Use `types :split` in code
 - [power.st](power.st) Interactive power calculator
 - [rule30.st](rule30.st) Implementation of [rule 30](https://mathworld.wolfram.com/CellularAutomaton.html).
-- [game.st](game.st) Some game to demonstrate input and console-screen refresh
+- [game.st](game.st) :sparkles:Adventurica:sparkles: game
+
+<img align="left" src="start.png">
+<img align="left" src="game1.png">
+<br>
+<img align="left" src="game2.png">
+<img align="left" src="end.png">
